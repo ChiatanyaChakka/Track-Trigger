@@ -64,13 +64,15 @@
         android:text="@string/sign_up_here"
         android:textColor="#0857F4"
         app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintStart_toStartOf="@+id/SubBut"
-        app:layout_constraintTop_toBottomOf="@+id/SubBut" />
+        app:layout_constraintStart_toStartOf="@+id/LoginButton"
+        app:layout_constraintTop_toBottomOf="@+id/LoginButton" />
 
     <EditText
         android:id="@+id/UserEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:layout_marginLeft="96dp"
         android:layout_marginEnd="19dp"
         android:layout_marginRight="19dp"
         android:layout_marginBottom="25dp"
@@ -79,16 +81,15 @@
         android:fontFamily="@font/advent_pro"
         android:hint="@string/enter_your_username"
         android:inputType="textEmailAddress"
-        android:shadowColor="#262626"
         android:textColor="#262626"
-        android:textColorHighlight="#262626"
         app:layout_constraintBottom_toTopOf="@+id/editTextTextPassword"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         tools:textColorHint="#262626" />
 
     <Button
-        android:id="@+id/SubBut"
+        android:id="@+id/LoginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/SinupButton"
@@ -109,7 +110,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="#262626"
         app:layout_constraintBaseline_toBaselineOf="@+id/button"
-        app:layout_constraintEnd_toEndOf="@+id/SubBut" />
+        app:layout_constraintEnd_toEndOf="@+id/LoginButton" />
 
     <EditText
         android:id="@+id/editTextTextPassword"
@@ -122,7 +123,7 @@
         android:hint="@string/password"
         android:inputType="textPassword"
         android:textColorHint="#262626"
-        app:layout_constraintBottom_toTopOf="@+id/SubBut"
+        app:layout_constraintBottom_toTopOf="@+id/LoginButton"
         app:layout_constraintStart_toStartOf="@+id/UserEmail"
         app:layout_constraintTop_toBottomOf="@+id/UserEmail"
         tools:text="" />

@@ -80,22 +80,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logox" />
 
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="87dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="241dp"
-        android:layout_marginLeft="241dp"
-        android:layout_marginTop="575dp"
-        android:layout_marginEnd="65dp"
-        android:layout_marginRight="65dp"
-        android:layout_marginBottom="184dp"
-        android:contentDescription="@string/facebooklogo"
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="112dp"
+        android:layout_marginLeft="112dp"
+        android:layout_marginTop="714dp"
+        android:layout_marginBottom="74dp"
+        android:text="@string/copyright"
+        android:textColor="#494646"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.053"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/facebook" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/imageView6"
@@ -103,10 +103,10 @@
         android:layout_height="56dp"
         android:layout_marginStart="69dp"
         android:layout_marginLeft="69dp"
-        android:layout_marginTop="567dp"
+        android:layout_marginTop="617dp"
         android:layout_marginEnd="238dp"
         android:layout_marginRight="238dp"
-        android:layout_marginBottom="184dp"
+        android:layout_marginBottom="134dp"
         android:contentDescription="@string/googlelogo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -114,18 +114,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/googlelogo" />
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="692dp"
-        android:layout_marginBottom="96dp"
-        android:text="@string/copyright"
-        android:textColor="#494646"
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="87dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="241dp"
+        android:layout_marginLeft="241dp"
+        android:layout_marginTop="625dp"
+        android:layout_marginEnd="65dp"
+        android:layout_marginRight="65dp"
+        android:layout_marginBottom="134dp"
+        android:contentDescription="@string/facebooklogo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/facebook" />
 
     <TextView
         android:id="@+id/textView5"
@@ -133,10 +137,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="178dp"
         android:layout_marginLeft="178dp"
-        android:layout_marginTop="571dp"
+        android:layout_marginTop="621dp"
         android:layout_marginEnd="170dp"
         android:layout_marginRight="170dp"
-        android:layout_marginBottom="190dp"
+        android:layout_marginBottom="140dp"
         android:text="@string/or"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="#262626"
@@ -186,5 +190,23 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:fontFamily="@font/advent_pro"
         tools:textColorHint="#262626" />
+
+    <Button
+        android:id="@+id/RegisterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="552dp"
+        android:layout_marginEnd="155dp"
+        android:layout_marginRight="155dp"
+        android:layout_marginBottom="207dp"
+        android:background="@color/black"
+        android:text="@string/register"
+        app:iconTint="#262626"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
