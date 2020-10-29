@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.NoActionBar">
-        <activity android:name=".SigninPage"></activity>
+        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".SigninPage" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
