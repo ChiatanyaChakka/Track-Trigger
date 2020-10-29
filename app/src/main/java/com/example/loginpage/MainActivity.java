@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -15,6 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
+    private Button register;
 
     private EditText email;
     private EditText password;
@@ -49,6 +51,14 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(AuthResult authResult) {
                 Toast.makeText(MainActivity.this, "Success!", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(MainActivity.this, SigninPage.class));
+                finish();
+            }
+        });
+        register=findViewById(R.id.RegisterButton);
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,  SigninPage.class));
                 finish();
             }
         });
