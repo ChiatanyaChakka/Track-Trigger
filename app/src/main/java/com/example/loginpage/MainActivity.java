@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         email = findViewById(R.id.UserEmail);
         password = findViewById(R.id.editTextTextPassword);
-        login = findViewById(R.id.SubBut);
+        login = findViewById(R.id.LoginButton);
 
         auth = FirebaseAuth.getInstance();
 
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(AuthResult authResult) {
                 Toast.makeText(MainActivity.this, "Success!", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(MainActivity.this, SigninPage.class));
+                //startActivity(new Intent(MainActivity.this, SigninPage.class));
                 finish();
             }
         });

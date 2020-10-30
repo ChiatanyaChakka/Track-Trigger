@@ -3,6 +3,7 @@ package com.example.loginpage;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -65,6 +66,8 @@ register.setOnClickListener(new View.OnClickListener() {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText( SigninPage.this ,"Successful!", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(SigninPage.this, MainActivity.class);
+                    startActivity(i);
                 }
                 else{
                     Toast.makeText( SigninPage.this ,"Failed!", Toast.LENGTH_SHORT).show();
