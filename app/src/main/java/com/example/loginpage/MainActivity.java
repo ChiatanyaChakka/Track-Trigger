@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -48,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(AuthResult authResult) {
                 Toast.makeText(MainActivity.this, "Success!", Toast.LENGTH_SHORT).show();
-                //startActivity(new Intent(MainActivity.this, SigninPage.class));
                 finish();
             }
         });
