@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +31,12 @@ public class SigninPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_page);
+        Spinner spinner = findViewById(R.id.profspin);
+        String[] professions = new String[]{"Profession", "Working Professional", "Student", "Home Maker"};
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
+                R.layout.spinner_textdef, professions);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_textdef);
+        spinner.setAdapter(arrayAdapter);
         email=findViewById(R.id.editTextTextEmailAddress2);
         password=findViewById(R.id.editTextTextPassword3);
                 phone=findViewById(R.id.editTextPhone);
