@@ -21,5 +21,7 @@
     <string name="enter_your_phone_number">Enter your Phone Number</string>
     <string name="facebooklogo">FaceBookLogo</string>
     <string name="or">OR</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <string name="register">Register</string>
 </resources>
