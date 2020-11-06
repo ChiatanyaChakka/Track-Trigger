@@ -1,6 +1,7 @@
 package com.example.loginpage;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.PendingIntent;
@@ -19,30 +20,44 @@ import java.util.Random;
 
 public class otpverification extends AppCompatActivity {
 
-    EditText otpphone = (EditText) findViewById(R.id.OTPTextFieldPhone);
-    EditText otpmail = (EditText) findViewById(R.id.OTPTextFieldMail);
-    Button genphone = (Button) findViewById(R.id.OTPGeneratorPhone);
-    Button genmail = (Button) findViewById(R.id.OTPGeneratorMail);
-    Button verphone = (Button) findViewById(R.id.VerifyPhone);
-    Button vermail = (Button) findViewById(R.id.VerifyMail);
-    TextView phonenum = (TextView) findViewById(R.id.phoneNumber);
-    TextView mail = (TextView) findViewById(R.id.Mail);
+    private EditText otpphone;
+    private EditText otpmail;
+    Button genphone;
+    Button genmail;
+    Button verphone;
+    Button vermail;
+    TextView phonenum;
+    TextView mail;
 
     private static int OTPphone;
     private static int OTPmail;
-    private static boolean phonedone = false;
-    private static boolean maildone = false;
+    private static boolean phonedone;
+    private static boolean maildone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otpverification);
+        otpphone = findViewById(R.id.OTPTextFieldPhone);
+
+        // Referencing the variables..
+        otpphone = findViewById(R.id.OTPTextFieldPhone);
+        otpmail = findViewById(R.id.OTPTextFieldMail);
+        genphone = findViewById(R.id.OTPGeneratorPhone);
+        genmail = findViewById(R.id.OTPGeneratorMail);
+        verphone = findViewById(R.id.VerifyPhone);
+        vermail = findViewById(R.id.VerifyMail);
+        phonenum = findViewById(R.id.phoneNumber);
+        mail = findViewById(R.id.Mail);
+        phonedone = false;
+        maildone = false;
 
         Bundle userinfo = getIntent().getExtras();
         String phone = userinfo.getString("PhoneNumber");
         String mailid = userinfo.getString("EmailID");
         phonenum.setText(phone);
         mail.setText(mailid);
+
 
         genphone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +72,7 @@ public class otpverification extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "OTP Generated Successfully", Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, 1);
+                        ActivityCompat.requestPermissions(otpverification.this, new String[]{Manifest.permission.SEND_SMS}, 1);
                     }
                 }
             }

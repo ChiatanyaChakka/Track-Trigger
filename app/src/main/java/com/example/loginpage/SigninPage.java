@@ -2,7 +2,9 @@ package com.example.loginpage;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -76,7 +78,7 @@ public class SigninPage extends AppCompatActivity {
                     Toast.makeText( SigninPage.this ,"Successful!", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(SigninPage.this, otpverification.class);
                     i.putExtra("PhoneNumber", text_phone);
-                    i.putExtra("EmailID", email);
+                    //i.putExtra("EmailID", email);
                     startActivity(i);
                 }
                 else{
