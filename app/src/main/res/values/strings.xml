@@ -24,4 +24,9 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="register">Register</string>
+    <string name="generate_otp">Generate OTP</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="verify">Verify</string>
+    <string name="Title_otpverify">Verify your Phone Number</string>
+    <string name="verify_mail_otp">Verify your Gmail</string>
 </resources>

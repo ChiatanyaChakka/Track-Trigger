@@ -43,9 +43,9 @@ public class SigninPage extends AppCompatActivity {
                 Username=findViewById(R.id.editTextTextPersonName);
                 register=findViewById(R.id.RegisterButton);
                 auth=FirebaseAuth.getInstance();
-register.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
+        register.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
         String text_email=email.getText().toString();
         String text_password=password.getText().toString();
         String text_phone=phone.getText().toString();
@@ -62,19 +62,21 @@ register.setOnClickListener(new View.OnClickListener() {
             Toast.makeText( SigninPage.this ,"Invaild mobile number", Toast.LENGTH_SHORT).show();
         }
         else{
-         registerUser(text_email,text_password);
+         registerUser(text_email,text_password, text_phone);
         }
     }
 });
     }
 
-    private void registerUser(String email, String password) {
+    private void registerUser(String email, String password, String text_phone) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SigninPage.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText( SigninPage.this ,"Successful!", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(SigninPage.this, MainActivity.class);
+                    Intent i = new Intent(SigninPage.this, otpverification.class);
+                    i.putExtra("PhoneNumber", text_phone);
+                    i.putExtra("EmailID", email);
                     startActivity(i);
                 }
                 else{
