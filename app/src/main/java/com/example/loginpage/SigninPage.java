@@ -65,7 +65,7 @@ public class SigninPage extends AppCompatActivity {
          registerUser(text_email,text_password, text_phone);
         }
     }
-});
+    });
     }
 
     private void registerUser(String email, String password, String text_phone) {

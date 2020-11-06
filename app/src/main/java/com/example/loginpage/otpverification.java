@@ -2,8 +2,11 @@ package com.example.loginpage;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.View;
@@ -44,14 +47,19 @@ public class otpverification extends AppCompatActivity {
         genphone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OTPphone = genOTP();
-                String message = "Never share your One-Time-Password with Anyone.\nYour OTP is "+ Integer.toString(OTPphone);
-                Intent intent = new Intent(getApplicationContext(), otpverification.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-                SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(phone, null, message, pendingIntent, null);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-                Toast.makeText(getApplicationContext(), "OTP Generated Successfully", Toast.LENGTH_SHORT).show();
+                    if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                        OTPphone = genOTP();
+                        String message = "Never share your One-Time-Password with Anyone.\nYour OTP is " + Integer.toString(OTPphone);
+                        SmsManager smsManager = SmsManager.getDefault();
+                        smsManager.sendTextMessage(phone, null, message, null, null);
+                        Toast.makeText(getApplicationContext(), "OTP Generated Successfully", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, 1);
+                    }
+                }
             }
         });
 
