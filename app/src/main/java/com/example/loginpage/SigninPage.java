@@ -33,6 +33,7 @@ public class SigninPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_page);
+        ActivityCompat.requestPermissions(SigninPage.this, new String[]{Manifest.permission.SEND_SMS}, 1);
         Spinner spinner = findViewById(R.id.profspin);
         String[] professions = new String[]{"Profession", "Working Professional", "Student", "Home Maker"};
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
@@ -64,13 +65,13 @@ public class SigninPage extends AppCompatActivity {
             Toast.makeText( SigninPage.this ,"Invaild mobile number", Toast.LENGTH_SHORT).show();
         }
         else{
-         registerUser(text_email,text_password, text_phone);
+         registerUser(text_email,text_password, text_phone, spinner.getSelectedItem().toString());
         }
     }
     });
     }
 
-    private void registerUser(String email, String password, String text_phone) {
+    private void registerUser(String email, String password, String text_phone, String profession) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SigninPage.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -78,7 +79,8 @@ public class SigninPage extends AppCompatActivity {
                     Toast.makeText( SigninPage.this ,"Successful!", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(SigninPage.this, otpverification.class);
                     i.putExtra("PhoneNumber", text_phone);
-                    //i.putExtra("EmailID", email);
+                    i.putExtra("EmailID", email);
+                    i.putExtra("profession", profession);
                     startActivity(i);
                 }
                 else{
