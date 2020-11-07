@@ -28,8 +28,7 @@ public class SigninPage extends AppCompatActivity {
     private EditText password;
     private EditText phone;
     private EditText Username;
-    private Button register;
-    private FirebaseAuth auth;
+    private Button verify;
 
 
     @Override
@@ -43,60 +42,33 @@ public class SigninPage extends AppCompatActivity {
                 R.layout.spinner_textdef, professions);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_textdef);
         spinner.setAdapter(arrayAdapter);
-        email=findViewById(R.id.editTextTextEmailAddress2);
-        password=findViewById(R.id.editTextTextPassword3);
-                phone=findViewById(R.id.editTextPhone);
-                Username=findViewById(R.id.editTextTextPersonName);
-                register=findViewById(R.id.RegisterButton);
-                auth=FirebaseAuth.getInstance();
-        register.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-        String text_email=email.getText().toString();
-        String text_password=password.getText().toString();
-        String text_phone=phone.getText().toString();
-        String text_Username=Username.getText().toString();
-        if(TextUtils.isEmpty(text_email)|| TextUtils.isEmpty(text_password)||TextUtils.isEmpty(text_phone)||TextUtils.isEmpty(text_Username)){
-           Toast.makeText( SigninPage.this ,"Empty Credentials!", Toast.LENGTH_SHORT).show();
-        }
-        else if(text_password.length()<6)
-        {
-            Toast.makeText( SigninPage.this ,"Password too short", Toast.LENGTH_SHORT).show();
-        }
-        else if(text_phone.length()<10)
-        {
-            Toast.makeText( SigninPage.this ,"Invaild mobile number", Toast.LENGTH_SHORT).show();
-        }
-        else{
-         registerUser(text_email,text_password, text_phone, spinner.getSelectedItem().toString(), text_Username);
-        }
-    }
-    });
-    }
-
-    private void registerUser(String email, String password, String phone, String profession, String username) {
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SigninPage.this, new OnCompleteListener<AuthResult>() {
+        email = findViewById(R.id.editTextTextEmailAddress2);
+        password = findViewById(R.id.editTextTextPassword3);
+        phone = findViewById(R.id.editTextPhone);
+        Username = findViewById(R.id.editTextTextPersonName);
+        verify = findViewById(R.id.CredentialVerificationButton);
+        verify.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText( SigninPage.this ,"Successful!", Toast.LENGTH_SHORT).show();
-
-                    HashMap<String, Object> map = new HashMap<>();
-                    map.put("email", email);
-                    map.put("username", username);
-                    map.put("phone", phone);
-                    map.put("profession", profession);
-
-                    FirebaseDatabase.getInstance().getReference().child("User1").updateChildren(map);
-
+            public void onClick(View v) {
+                String text_email = email.getText().toString();
+                String text_password = password.getText().toString();
+                String text_phone = phone.getText().toString();
+                String text_Username = Username.getText().toString();
+                if (TextUtils.isEmpty(text_email) || TextUtils.isEmpty(text_password) || TextUtils.isEmpty(text_phone) || TextUtils.isEmpty(text_Username)) {
+                    Toast.makeText(SigninPage.this, "Empty Credentials!", Toast.LENGTH_SHORT).show();
+                } else if (text_password.length() < 6) {
+                    Toast.makeText(SigninPage.this, "Password too short", Toast.LENGTH_SHORT).show();
+                } else if (text_phone.length() < 10) {
+                    Toast.makeText(SigninPage.this, "Invaild mobile number", Toast.LENGTH_SHORT).show();
+                } else {
                     Intent i = new Intent(SigninPage.this, otpverification.class);
-                    i.putExtra("PhoneNumber", phone);
-                    i.putExtra("EmailID", email);
-                    i.putExtra("profession", profession);
+                    i.putExtra("PhoneNumber", text_phone);
+                    i.putExtra("EmailID", text_email);
+                    i.putExtra("profession", spinner.getSelectedItem().toString());
+                    i.putExtra("password", text_password);
+                    i.putExtra("username", text_Username);
                     startActivity(i);
-                }
-                else{
-                    Toast.makeText( SigninPage.this ,"Failed!", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
