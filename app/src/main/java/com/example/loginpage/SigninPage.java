@@ -19,6 +19,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class SigninPage extends AppCompatActivity {
     private EditText email;
@@ -65,20 +68,29 @@ public class SigninPage extends AppCompatActivity {
             Toast.makeText( SigninPage.this ,"Invaild mobile number", Toast.LENGTH_SHORT).show();
         }
         else{
-         registerUser(text_email,text_password, text_phone, spinner.getSelectedItem().toString());
+         registerUser(text_email,text_password, text_phone, spinner.getSelectedItem().toString(), text_Username);
         }
     }
     });
     }
 
-    private void registerUser(String email, String password, String text_phone, String profession) {
+    private void registerUser(String email, String password, String phone, String profession, String username) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SigninPage.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText( SigninPage.this ,"Successful!", Toast.LENGTH_SHORT).show();
+
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("email", email);
+                    map.put("username", username);
+                    map.put("phone", phone);
+                    map.put("profession", profession);
+
+                    FirebaseDatabase.getInstance().getReference().child("User1").updateChildren(map);
+
                     Intent i = new Intent(SigninPage.this, otpverification.class);
-                    i.putExtra("PhoneNumber", text_phone);
+                    i.putExtra("PhoneNumber", phone);
                     i.putExtra("EmailID", email);
                     i.putExtra("profession", profession);
                     startActivity(i);
