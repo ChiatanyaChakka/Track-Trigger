@@ -8,10 +8,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -66,6 +70,29 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        auth.signInWithEmailAndPassword(email, password).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this, "Failure!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+//        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<AuthResult> task) {
+//                if(task.isSuccessful()) {
+//                    Toast.makeText(MainActivity.this, "Welcome!"+email, Toast.LENGTH_SHORT).show();
+//                    Intent p = new Intent(MainActivity.this, DashBoard.class);
+//                    startActivity(p);
+//                    finish();
+//                }
+//                else{
+//                    Toast.makeText(MainActivity.this, "Failure!", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+
     }
 
     public void SignUpRedirect(View view) {
