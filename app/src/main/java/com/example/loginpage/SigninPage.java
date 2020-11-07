@@ -71,7 +71,7 @@ public class SigninPage extends AppCompatActivity {
     });
     }
 
-    private void registerUser(String email, String password, String text_phone, String profession) {
+    private void registerUser(String email, String password, String phone, String profession) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(SigninPage.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
