@@ -78,7 +78,7 @@ public class SigninPage extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Toast.makeText( SigninPage.this ,"Successful!", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(SigninPage.this, otpverification.class);
-                    i.putExtra("PhoneNumber", text_phone);
+                    i.putExtra("PhoneNumber", phone);
                     i.putExtra("EmailID", email);
                     i.putExtra("profession", profession);
                     startActivity(i);
