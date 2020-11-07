@@ -15,29 +15,42 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+
 public class otpverification extends AppCompatActivity {
+
+    private FirebaseAuth auth;
 
     private EditText otpphone;
     private EditText otpmail;
-    Button genphone;
-    Button genmail;
-    Button verphone;
-    Button vermail;
-    TextView phonenum;
-    TextView mail;
-    Button redirect;
-    String profession;
-    GmailSender sender;
+    private Button genphone;
+    private Button genmail;
+    private Button verphone;
+    private Button vermail;
+    private TextView phonenum;
+    private TextView mail;
+    private Button redirect;
+    private String profession;
+    private GmailSender sender;
 
     private static int OTPphone;
     private static int OTPmail;
     private static boolean phonedone;
     private static boolean maildone;
-    String phone;
-    String mailid;
+    private String phone;
+    private String mailid;
+    private String password;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +69,7 @@ public class otpverification extends AppCompatActivity {
         mail = findViewById(R.id.Mail);
         phonedone = false;
         maildone = false;
-        redirect = findViewById(R.id.dashboardredirect);
+        redirect = findViewById(R.id.RegisterAndRedirectToDashbard);
         sender = new GmailSender("trackandtriggerr@gmail.com", "OOP@@T&T");
 
         Bundle userinfo = getIntent().getExtras();
@@ -65,6 +78,8 @@ public class otpverification extends AppCompatActivity {
         phonenum.setText(phone);
         mail.setText(mailid);
         profession = userinfo.getString("profession");
+        password = userinfo.getString("password");
+        username = userinfo.getString("username");
 
 
         genphone.setOnClickListener(new View.OnClickListener() {
@@ -163,9 +178,7 @@ public class otpverification extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please verify your Gmail", Toast.LENGTH_LONG).show();
                 }
                 else{
-                    Intent i =  new Intent(otpverification.this, DashBoard.class);
-                    i.putExtra("Profession", profession);
-                    startActivity(i);
+                    registerUser(mailid, password, phone, profession, username);
                 }
             }
         });
@@ -216,5 +229,30 @@ public class otpverification extends AppCompatActivity {
             Toast.makeText(otpverification.this, "Email Sent successfully", Toast.LENGTH_SHORT).show();
 
         }
+    }
+
+    private void registerUser(String email, String password, String phone, String profession, String username) {
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(otpverification.this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(otpverification.this, "Successful!", Toast.LENGTH_SHORT).show();
+
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("email", email);
+                    map.put("username", username);
+                    map.put("phone", phone);
+                    map.put("profession", profession);
+
+                    FirebaseDatabase.getInstance().getReference().child("User1").updateChildren(map);
+
+                    Intent i = new Intent(otpverification.this, DashBoard.class);
+                    i.putExtra("Profession", profession);
+                    startActivity(i);
+                } else {
+                    Toast.makeText(otpverification.this, "Failed!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

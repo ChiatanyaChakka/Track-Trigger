@@ -29,4 +29,5 @@
     <string name="verify">Verify</string>
     <string name="Title_otpverify">Verify your Phone Number</string>
     <string name="verify_mail_otp">Verify your Gmail</string>
+    <string name="BothVerificationsDone">After verifying credentials!</string>
 </resources>
