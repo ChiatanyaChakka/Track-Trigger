@@ -15,29 +15,42 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+
 public class otpverification extends AppCompatActivity {
+
+    private FirebaseAuth auth;
 
     private EditText otpphone;
     private EditText otpmail;
-    Button genphone;
-    Button genmail;
-    Button verphone;
-    Button vermail;
-    TextView phonenum;
-    TextView mail;
-    Button redirect;
-    String profession;
-    GmailSender sender;
+    private Button GeneratePhoneOTP;
+    private Button GenerateMailOTP;
+    private Button VerifyPhone;
+    private Button VerifyMail;
+    private TextView phonenum;
+    private TextView mail;
+    private Button redirect;
+    private String profession;
+    private GmailSender sender;
 
     private static int OTPphone;
     private static int OTPmail;
     private static boolean phonedone;
     private static boolean maildone;
-    String phone;
-    String mailid;
+    private String phone;
+    private String mailid;
+    private String password;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,16 +61,18 @@ public class otpverification extends AppCompatActivity {
         // Referencing the variables..
         otpphone = findViewById(R.id.OTPTextFieldPhone);
         otpmail = findViewById(R.id.OTPTextFieldMail);
-        genphone = findViewById(R.id.OTPGeneratorPhone);
-        genmail = findViewById(R.id.OTPGeneratorMail);
-        verphone = findViewById(R.id.VerifyPhone);
-        vermail = findViewById(R.id.VerifyMail);
+        GeneratePhoneOTP = findViewById(R.id.OTPGeneratorPhone);
+        GenerateMailOTP = findViewById(R.id.OTPGeneratorMail);
+        VerifyPhone = findViewById(R.id.VerifyPhone);
+        VerifyMail = findViewById(R.id.VerifyMail);
         phonenum = findViewById(R.id.phoneNumber);
         mail = findViewById(R.id.Mail);
         phonedone = false;
         maildone = false;
-        redirect = findViewById(R.id.dashboardredirect);
+        redirect = findViewById(R.id.RegisterAndRedirectToDashbard);
         sender = new GmailSender("trackandtriggerr@gmail.com", "OOP@@T&T");
+
+        auth = FirebaseAuth.getInstance();
 
         Bundle userinfo = getIntent().getExtras();
         phone = userinfo.getString("PhoneNumber");
@@ -65,9 +80,11 @@ public class otpverification extends AppCompatActivity {
         phonenum.setText(phone);
         mail.setText(mailid);
         profession = userinfo.getString("profession");
+        password = userinfo.getString("password");
+        username = userinfo.getString("username");
 
 
-        genphone.setOnClickListener(new View.OnClickListener() {
+        GeneratePhoneOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -78,37 +95,33 @@ public class otpverification extends AppCompatActivity {
                         SmsManager smsManager = SmsManager.getDefault();
                         smsManager.sendTextMessage(phone, "Track&Trigger", message, null, null);
                         Toast.makeText(getApplicationContext(), "OTP Generated Successfully", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
+                    } else {
                         ActivityCompat.requestPermissions(otpverification.this, new String[]{Manifest.permission.SEND_SMS}, 1);
                     }
                 }
             }
         });
 
-        verphone.setOnClickListener(new View.OnClickListener() {
+        VerifyPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String enterotp = otpphone.getText().toString();
-                if(enterotp == null){
+                if (enterotp == null) {
                     Toast.makeText(getApplicationContext(), "Field is Empty!", Toast.LENGTH_SHORT).show();
-                }
-                else if(enterotp.matches("\\d+")){
-                    if(OTPphone == Integer.parseInt(enterotp)){
+                } else if (enterotp.matches("\\d+")) {
+                    if (OTPphone == Integer.parseInt(enterotp)) {
                         phonedone = true;
                         Toast.makeText(getApplicationContext(), "Verified successfully", Toast.LENGTH_LONG).show();
-                    }
-                    else{
+                    } else {
                         Toast.makeText(getApplicationContext(), "Failed! Try Again", Toast.LENGTH_LONG).show();
                     }
-                }
-                else{
+                } else {
                     Toast.makeText(getApplicationContext(), "Please Enter numbers only", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        genmail.setOnClickListener(new View.OnClickListener() {
+        GenerateMailOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 OTPmail = genOTP();
@@ -131,23 +144,20 @@ public class otpverification extends AppCompatActivity {
             }
         });
 
-        vermail.setOnClickListener(new View.OnClickListener() {
+        VerifyMail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String enterotp = otpmail.getText().toString();
-                if(enterotp == null){
+                if (enterotp == null) {
                     Toast.makeText(otpverification.this, "Field is Empty!", Toast.LENGTH_SHORT).show();
-                }
-                else if(enterotp.matches("\\d+")){
-                    if(OTPmail == Integer.parseInt(enterotp)){
+                } else if (enterotp.matches("\\d+")) {
+                    if (OTPmail == Integer.parseInt(enterotp)) {
                         maildone = true;
                         Toast.makeText(otpverification.this, "Verified successfully", Toast.LENGTH_LONG).show();
-                    }
-                    else{
+                    } else {
                         Toast.makeText(otpverification.this, "Failed! Try Again", Toast.LENGTH_LONG).show();
                     }
-                }
-                else{
+                } else {
                     Toast.makeText(otpverification.this, "Please Enter numbers only", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -156,23 +166,44 @@ public class otpverification extends AppCompatActivity {
         redirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(phonedone == false){
+                if (phonedone == false) {
                     Toast.makeText(getApplicationContext(), "Please verify your Phone number", Toast.LENGTH_LONG).show();
-                }
-                else if(maildone == false){
+                } else if (maildone == false) {
                     Toast.makeText(getApplicationContext(), "Please verify your Gmail", Toast.LENGTH_LONG).show();
-                }
-                else{
-                    Intent i =  new Intent(otpverification.this, DashBoard.class);
-                    i.putExtra("Profession", profession);
-                    startActivity(i);
+                } else {
+                    registerUser(mailid, password, phone, profession, username);
                 }
             }
         });
     }
 
-    private int genOTP(){
-        return (int)(Math.random() * (1000000 - 100000 + 1) + 100000);
+    private void registerUser(String email, String password, String phone, String profession, String username) {
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(otpverification.this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(otpverification.this, "Successful!", Toast.LENGTH_SHORT).show();
+
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("email", email);
+                    map.put("username", username);
+                    map.put("phone", phone);
+                    map.put("profession", profession);
+
+                    FirebaseDatabase.getInstance().getReference().child("User1").updateChildren(map);
+
+                    Intent i = new Intent(otpverification.this, DashBoard.class);
+                    i.putExtra("Profession", profession);
+                    startActivity(i);
+                } else {
+                    Toast.makeText(otpverification.this, "Failed!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private int genOTP() {
+        return (int) (Math.random() * (1000000 - 100000 + 1) + 100000);
     }
 
     class MyAsyncClass extends AsyncTask<Void, Void, Void> {

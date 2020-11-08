@@ -54,6 +54,19 @@
         tools:fontFamily="@font/advent_pro"
         tools:textColorHint="#262626" />
 
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="719dp"
+        android:layout_marginBottom="69dp"
+        android:text="@string/copyright"
+        android:textColor="#494646"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="wrap_content"
@@ -70,19 +83,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logox" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="719dp"
-        android:layout_marginBottom="69dp"
-        android:text="@string/copyright"
-        android:textColor="#494646"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView9"
@@ -175,14 +175,14 @@
         tools:textColorHint="#262626" />
 
     <Button
-        android:id="@+id/RegisterButton"
+        android:id="@+id/CredentialVerificationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="569dp"
         android:layout_marginBottom="190dp"
         android:background="#000000"
         app:backgroundTint="#000000"
-        android:text="@string/register"
+        android:text="@string/verify"
         android:textColor="#FFFFFF"
         app:iconTint="#262626"
         app:layout_constraintBottom_toBottomOf="parent"
