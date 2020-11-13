@@ -70,6 +70,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         txt_email = snapshot.getValue(String.class);
+
+                        String txt_password = password.getText().toString();
+                        if (TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)) {
+                            Toast.makeText(MainActivity.this, "Fill the required credentials!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            logIn(txt_email, txt_password);
+                        }
                     }
 
                     @Override
@@ -77,13 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
-
-                String txt_password = password.getText().toString();
-                if (TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)) {
-                    Toast.makeText(MainActivity.this, "Fill the required credentials!", Toast.LENGTH_SHORT).show();
-                } else {
-                    logIn(txt_email, txt_password);
-                }
             }
         });
     }
