@@ -19,7 +19,7 @@
         android:layout_marginRight="60dp"
         android:layout_marginBottom="21dp"
         android:contentDescription="@string/logooftheapp"
-        app:layout_constraintBottom_toTopOf="@+id/UserEmail"
+        app:layout_constraintBottom_toTopOf="@+id/Uname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -53,7 +53,7 @@
         app:layout_constraintTop_toBottomOf="@+id/LoginButton" />
 
     <EditText
-        android:id="@+id/UserEmail"
+        android:id="@+id/Uname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="19dp"
@@ -108,8 +108,8 @@
         android:inputType="textPassword"
         android:textColorHint="#262626"
         app:layout_constraintBottom_toTopOf="@+id/LoginButton"
-        app:layout_constraintStart_toStartOf="@+id/UserEmail"
-        app:layout_constraintTop_toBottomOf="@+id/UserEmail"
+        app:layout_constraintStart_toStartOf="@+id/Uname"
+        app:layout_constraintTop_toBottomOf="@+id/Uname"
         tools:text="" />
 
     <Button

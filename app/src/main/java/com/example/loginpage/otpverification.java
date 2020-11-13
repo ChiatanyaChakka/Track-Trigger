@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 public class otpverification extends AppCompatActivity {
 
     private FirebaseAuth auth;
+    private DatabaseReference DBref;
 
     private EditText otpphone;
     private EditText otpmail;
@@ -56,7 +58,6 @@ public class otpverification extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otpverification);
-        otpphone = findViewById(R.id.OTPTextFieldPhone);
 
         // Referencing the variables..
         otpphone = findViewById(R.id.OTPTextFieldPhone);
@@ -73,6 +74,7 @@ public class otpverification extends AppCompatActivity {
         sender = new GmailSender("trackandtriggerr@gmail.com", "OOP@@T&T");
 
         auth = FirebaseAuth.getInstance();
+        DBref = FirebaseDatabase.getInstance().getReference();
 
         Bundle userinfo = getIntent().getExtras();
         phone = userinfo.getString("PhoneNumber");
@@ -189,8 +191,9 @@ public class otpverification extends AppCompatActivity {
                     map.put("username", username);
                     map.put("phone", phone);
                     map.put("profession", profession);
+                    map.put("UID", auth.getCurrentUser().getUid());
 
-                    FirebaseDatabase.getInstance().getReference().child("User1").updateChildren(map);
+                    DBref.child("Users").child(username).setValue(map);
 
                     Intent i = new Intent(otpverification.this, DashBoard.class);
                     i.putExtra("Profession", profession);

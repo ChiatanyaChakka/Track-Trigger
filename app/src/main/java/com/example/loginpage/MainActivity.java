@@ -13,21 +13,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText email;
+    private EditText uname;
     private EditText password;
     private Button login;
     private Button test;
 
     private FirebaseAuth auth;
+    private DatabaseReference DBref;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -36,11 +37,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        email = findViewById(R.id.UserEmail);
+        uname = findViewById(R.id.Uname);
         password = findViewById(R.id.editTextTextPassword);
         login = findViewById(R.id.LoginButton);
 
         auth = FirebaseAuth.getInstance();
+        DBref = FirebaseDatabase.getInstance().getReference();
 
         test = findViewById(R.id.testButton);
         test.setOnClickListener(new View.OnClickListener() {
@@ -54,11 +56,12 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String txt_email = email.getText().toString();
+                String username = uname.getText().toString();
+                String txt_email = DBref.child("Users").child(username).child("email").toString();
                 String txt_password = password.getText().toString();
-                if(TextUtils.isEmpty(txt_email)||TextUtils.isEmpty(txt_password)){
+                if (TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)) {
                     Toast.makeText(MainActivity.this, "Fill the required credentials!", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     logIn(txt_email, txt_password);
                 }
             }
@@ -69,14 +72,12 @@ public class MainActivity extends AppCompatActivity {
         auth.signInWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
-                Toast.makeText(MainActivity.this, "Welcome!"+email, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Welcome!" + email, Toast.LENGTH_SHORT).show();
                 Intent p = new Intent(MainActivity.this, DashBoard.class);
                 startActivity(p);
                 finish();
             }
-        });
-
-        auth.signInWithEmailAndPassword(email, password).addOnFailureListener(new OnFailureListener() {
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(MainActivity.this, "Failure!", Toast.LENGTH_SHORT).show();
