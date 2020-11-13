@@ -17,18 +17,25 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText uname;
+    private EditText username;
     private EditText password;
     private Button login;
     private Button test;
 
+    private String txt_email;
+
     private FirebaseAuth auth;
-    private DatabaseReference DBref;
+    private DatabaseReference rootRef, emailRef;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -37,12 +44,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        uname = findViewById(R.id.Uname);
+        username = findViewById(R.id.Username);
         password = findViewById(R.id.editTextTextPassword);
         login = findViewById(R.id.LoginButton);
 
         auth = FirebaseAuth.getInstance();
-        DBref = FirebaseDatabase.getInstance().getReference();
+        rootRef = FirebaseDatabase.getInstance().getReference();
 
         test = findViewById(R.id.testButton);
         test.setOnClickListener(new View.OnClickListener() {
@@ -56,8 +63,21 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = uname.getText().toString();
-                String txt_email = DBref.child("Users").child(username).child("email").toString();
+                String txt_username = username.getText().toString();
+                emailRef = rootRef.child("Users").child(txt_username).child("email");
+
+                emailRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        txt_email = snapshot.getValue(String.class);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
                 String txt_password = password.getText().toString();
                 if (TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)) {
                     Toast.makeText(MainActivity.this, "Fill the required credentials!", Toast.LENGTH_SHORT).show();
@@ -80,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(MainActivity.this, "Failure!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
