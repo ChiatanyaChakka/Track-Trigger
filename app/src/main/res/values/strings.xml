@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Track and Trigger</string>
+
+    <string name="facebook_app_id">1259176907790320</string>
+    <string name="fb_login_protocol_scheme">fb1259176907790320</string>
+
     <string name="SinupButton">Login</string>
     <string name="password">Password</string>
     <string name="enter_your_username">Enter your Username</string>
@@ -30,4 +34,5 @@
     <string name="Title_otpverify">Verify your Phone Number</string>
     <string name="verify_mail_otp">Verify your Gmail</string>
     <string name="BothVerificationsDone">After verifying credentials!</string>
+    <string name="SocialProfilePrompt">Or Connect with a Social Profile:</string>
 </resources>
