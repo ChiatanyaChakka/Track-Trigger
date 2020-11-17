@@ -230,7 +230,7 @@ public class otpverification extends AppCompatActivity {
 
                 // Add subject, Body, your mail Id, and receiver mail Id.
                 sender.sendMail("OTP--Track and Trigger app",
-                        "Never share your One-Time-Password with anyone\nYour OTP for verification of the mail is"+Integer.toString(OTPmail),
+                        "Never share your One-Time-Password with anyone\nYour OTP for verification of the mail is" +Integer.toString(OTPmail),
                         "trackandtriggerr@gmail.com",mailid);
                 Log.d("send", "done");
             }
