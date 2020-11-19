@@ -37,7 +37,7 @@ public class SigninPage extends AppCompatActivity {
         setContentView(R.layout.activity_signin_page);
         ActivityCompat.requestPermissions(SigninPage.this, new String[]{Manifest.permission.SEND_SMS}, 1);
         Spinner spinner = findViewById(R.id.profspin);
-        String[] professions = new String[]{"Profession", "Working Professional", "Student", "Home Maker"};
+        String[] professions = new String[]{"Profession","Working Professional","Student","Home Maker"};
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
                 R.layout.spinner_textdef, professions);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_textdef);

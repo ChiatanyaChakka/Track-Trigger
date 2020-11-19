@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent p = new Intent(MainActivity.this, DashBoard.class);
+                p.putExtra("Profession", "Profession");
                 startActivity(p);
             }
         });

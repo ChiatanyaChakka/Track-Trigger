@@ -10,6 +10,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+
+import com.google.android.material.navigation.NavigationView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -19,6 +24,9 @@ import com.google.firebase.database.FirebaseDatabase;
 public class DashBoard extends AppCompatActivity {
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle toggle;
+    private Button testbutton;
+    LinearLayout imagelayout;
+    private NavigationView navigationView;
     private Button logout;
 
     private FirebaseAuth auth;
@@ -27,15 +35,53 @@ public class DashBoard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
+        navDrawer = (DrawerLayout) findViewById(R.id.dash);
+        imagelayout = (LinearLayout) findViewById(R.id.imagelayout);
+        navigationView = findViewById(R.id.lisofitems);
+
+        //Bundle prof = getIntent().getExtras();
+        String profession = "Working Professional";//prof.getString("Profession");
+
+        if(profession == "Profession"){ imagelayout.setBackgroundResource(R.drawable.defautlwallpaper);}
+        else if(profession == "Working Professional"){ imagelayout.setBackgroundResource(R.drawable.workingprofwallpaper);}
+        else if(profession == "Student"){ imagelayout.setBackgroundResource(R.drawable.studentwallpaper);}
+        else{ imagelayout.setBackgroundResource(R.drawable.homemakerwallpaper);}
+
 
         auth = FirebaseAuth.getInstance();
 
         logout = findViewById(R.id.logout);
-       navDrawer = (DrawerLayout) findViewById(R.id.drawer);
+       navDrawer = (DrawerLayout) findViewById(R.id.dash);
         toggle = new ActionBarDrawerToggle(this, navDrawer, R.string.open, R.string.close);
         navDrawer.addDrawerListener(toggle);
         toggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if(id == R.id.trigger){
+                    Intent i = new Intent(getApplicationContext(), NewEventSetter.class);
+                    startActivity(i);
+                }
+                else if (id == R.id.dashboard){
+                    Intent dashboard = new Intent(getApplicationContext(), DashBoard.class);
+                    startActivity(dashboard);
+                }
+                return true;
+            }
+        });
+
+
+
+        testbutton = findViewById(R.id.button10);
+        testbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(DashBoard.this, Groceries.class);
+                startActivity(i);
+            }
+        });
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override

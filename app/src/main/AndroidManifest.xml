@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -13,6 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
+        <activity android:name=".NewEventSetter"></activity>
+        <activity android:name=".Groceries"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".otpverification" />
         <activity android:name=".LinkAccounts"></activity>
 
         <meta-data
@@ -35,7 +40,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".otpverification" />
         <activity android:name=".DashBoard" />
         <activity android:name=".SigninPage" />
         <activity android:name=".MainActivity" />
@@ -46,6 +50,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver
+            android:name=".MyReceiver"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>
