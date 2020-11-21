@@ -8,7 +8,7 @@
 
     <string name="SinupButton">Login</string>
     <string name="password">Password</string>
-    <string name="enter_your_username">Enter your Username</string>
+    <string name="enter_your_email">Enter your Email</string>
     <string name="copyright">©BITS PILANI UNIVERSITY</string>
     <string name="logooftheapp">LogoOfTheApp</string>
     <string name="sign_up_here">Sign Up here!</string>
@@ -37,4 +37,5 @@
     <string name="verify_mail_otp">Verify your Gmail</string>
     <string name="BothVerificationsDone">After verifying credentials!</string>
     <string name="SocialProfilePrompt">Or Connect with a Social Profile:</string>
+    <string name="enter_your_username">Username</string>
 </resources>

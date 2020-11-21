@@ -19,9 +19,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class SigninPage extends AppCompatActivity {
     private EditText email;
@@ -30,14 +35,21 @@ public class SigninPage extends AppCompatActivity {
     private EditText Username;
     private Button verify;
 
+    private boolean verified;
+
+    private DatabaseReference rootRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_page);
+
+        rootRef = FirebaseDatabase.getInstance().getReference();
+
         ActivityCompat.requestPermissions(SigninPage.this, new String[]{Manifest.permission.SEND_SMS}, 1);
         Spinner spinner = findViewById(R.id.profspin);
-        String[] professions = new String[]{"Profession","Working Professional","Student","Home Maker"};
+        String[] professions = new String[]{"Default","Working Professional","Student","Home Maker"};
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
                 R.layout.spinner_textdef, professions);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_textdef);
@@ -54,12 +66,14 @@ public class SigninPage extends AppCompatActivity {
                 String text_password = password.getText().toString();
                 String text_phone = phone.getText().toString();
                 String text_Username = Username.getText().toString();
-                if (TextUtils.isEmpty(text_email) || TextUtils.isEmpty(text_password) || TextUtils.isEmpty(text_phone) || TextUtils.isEmpty(text_Username)) {
+                if(!usernameOk(text_Username)){
+                    Toast.makeText(SigninPage.this,"Enter a valid, professional Username!",Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(text_email) || TextUtils.isEmpty(text_password) || TextUtils.isEmpty(text_phone) || TextUtils.isEmpty(text_Username)) {
                     Toast.makeText(SigninPage.this, "Empty Credentials!", Toast.LENGTH_SHORT).show();
                 } else if (text_password.length() < 6) {
                     Toast.makeText(SigninPage.this, "Password too short", Toast.LENGTH_SHORT).show();
                 } else if (text_phone.length() < 10) {
-                    Toast.makeText(SigninPage.this, "Invaild mobile number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SigninPage.this, "Invalid mobile number", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent i = new Intent(SigninPage.this, otpverification.class);
                     i.putExtra("PhoneNumber", text_phone);
@@ -68,10 +82,17 @@ public class SigninPage extends AppCompatActivity {
                     i.putExtra("password", text_password);
                     i.putExtra("username", text_Username);
                     startActivity(i);
-
                 }
+            }
+
+            private boolean usernameOk(String text_username) {
+                verified = true;
+                Pattern pattern = Pattern.compile("[[A-Z]{1}[a-z]+\\s]+[[A-Z]{1}[a-z]+]");
+                if (!Pattern.matches(String.valueOf(pattern),text_username)) {
+                    verified = false;
+                }
+                return verified;
             }
         });
     }
-
 }

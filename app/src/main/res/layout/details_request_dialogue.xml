@@ -7,7 +7,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Phonenumber"
-        android:textSize="30dp"
+        android:textSize="40dp"
+        android:layout_margin="10dp"
+        android:fontFamily="@font/advent_pro"
         android:textStyle="bold"
         android:textAlignment="center"
         android:gravity="center_horizontal" />
@@ -16,14 +18,34 @@
         android:id="@+id/phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:autofillHints="@string/enter_your_phone_number"
+        android:layout_margin="10dp"
         android:inputType="phone"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
         android:hint="@string/enter_your_phone_number" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Profession"
+        android:textSize="40dp"
+        android:layout_margin="10dp"
+        android:fontFamily="@font/advent_pro"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:gravity="center_horizontal" />
+
+    <Spinner
+        android:id="@+id/profession"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:dropDownSelector="@color/white"
+        android:background="@color/white"
+        android:layout_margin="10dp"
+        android:textAlignment="gravity" />
 
     <Button
         android:id="@+id/ok_button"
+        android:layout_margin="10dp"
+        android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="OK"/>
@@ -31,7 +53,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Please enter your phone number for notification purpose"
+        android:paddingBottom="20dp"
+        android:textSize="20dp"
+        android:text="Please enter the required details"
         android:layout_gravity="center"/>
 
 </LinearLayout>

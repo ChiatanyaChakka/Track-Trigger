@@ -1,16 +1,16 @@
 package com.example.loginpage;
 
-import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,14 +43,12 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.security.AuthProvider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,21 +59,27 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN =122 ;
 
-    private EditText username;
+    private EditText email;
     private EditText password;
     private Button login;
     private Button test;
     private ImageView facebook;
     private ImageView google;
-
-    private String txt_email;
+    private AlertDialog dialog;
+    private AlertDialog.Builder builder;
+    private View view;
+    private EditText phone;
+    private Button okButton;
+    private Spinner spinner;
 
     private FirebaseAuth auth;
-    private DatabaseReference rootRef, emailRef;
-    CallbackManager callbackManager;
+    private DatabaseReference userDetailRef;
+    private HashMap<String,Object> map;
+    private CallbackManager callbackManager;
     private GoogleSignInClient googleSignInClient;
     private GoogleSignInOptions gso;
     private AuthCredential credential, prevCredential;
+    private FirebaseUser user;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -87,9 +91,27 @@ public class MainActivity extends AppCompatActivity {
 
         facebook = findViewById(R.id.Facebook);
         google = findViewById(R.id.Google);
-        username = findViewById(R.id.Username);
+        email = findViewById(R.id.Email);
         password = findViewById(R.id.editTextTextPassword);
         login = findViewById(R.id.LoginButton);
+
+        view = getLayoutInflater().inflate(R.layout.details_request_dialogue,null);
+
+        spinner = view.findViewById(R.id.profession);
+        String[] professionsList = new String[]{"Default","Working Professional","Student","Home Maker"};
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
+                R.layout.spinner_textdef, professionsList);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_textdef);
+        spinner.setAdapter(arrayAdapter);
+
+        builder = new AlertDialog.Builder(MainActivity.this);
+        phone = view.findViewById(R.id.phone);
+        okButton = view.findViewById(R.id.ok_button);
+        builder.setView(view);
+        builder.setCancelable(false);
+        dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -98,7 +120,8 @@ public class MainActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, gso);
         callbackManager = CallbackManager.Factory.create();
         auth = FirebaseAuth.getInstance();
-        rootRef = FirebaseDatabase.getInstance().getReference();
+        userDetailRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        map = new HashMap<>();
 
         test = findViewById(R.id.testButton);
         test.setOnClickListener(new View.OnClickListener() {
@@ -149,30 +172,47 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String txt_username = username.getText().toString();
-                emailRef = rootRef.child("Users").child(txt_username).child("email");
+                String txt_email = email.getText().toString();
+                String txt_password = password.getText().toString();
 
-                emailRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        txt_email = snapshot.getValue(String.class);
-                        String txt_password = password.getText().toString();
-                        if (TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)) {
-                            Toast.makeText(MainActivity.this, "Fill the required credentials!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            credential = EmailAuthProvider.getCredential(txt_email, txt_password);
-                            if(prevCredential != null) {
-                                SignInWithCredential(credential, prevCredential);
-                            }else {
-                                SignInWithCredential(credential);
-                            }
-                        }
+                if (TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)) {
+                    Toast.makeText(MainActivity.this, "Fill the required credentials!", Toast.LENGTH_SHORT).show();
+                } else {
+                    credential = EmailAuthProvider.getCredential(txt_email, txt_password);
+                    if(prevCredential != null) {
+                        SignInWithCredential(credential, prevCredential);
+                    }else {
+                        SignInWithCredential(credential);
                     }
+                }
+            }
+        });
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                    }
-                });
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String txt_phone = phone.getText().toString();
+                String profession = spinner.getSelectedItem().toString();
+
+                if (txt_phone.equals("") || txt_phone == null || !txt_phone.matches("\\d{10}")){
+                    Toast.makeText(getApplicationContext(),"Please enter your 10-digit phone number to continue", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    map.put("phone", txt_phone);
+                    Toast.makeText(MainActivity.this, "dialog dismissed", Toast.LENGTH_SHORT).show();
+                    map.put("profession", profession);
+                    userDetailRef.child(user.getUid()).setValue(map);
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Intent intent = new Intent(MainActivity.this,DashBoard.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -181,45 +221,24 @@ public class MainActivity extends AppCompatActivity {
         auth.signInWithCredential(currentCredential).addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
-                FirebaseUser user = auth.getCurrentUser();
-
-                HashMap<String,Object> map = new HashMap<>();
-                map.put("email", user.getEmail());
-                map.put("username", user.getDisplayName());
-                if (user.getPhoneNumber() != null) {
-                    map.put("phone", user.getPhoneNumber());
-                }else {
-                    AlertDialog.Builder phoneRequest = new AlertDialog.Builder(MainActivity.this);
-                    View view = getLayoutInflater().inflate(R.layout.phone_request_dialogue,null);
-                    EditText getPhone = view.findViewById(R.id.phone);
-                    Button ok = view.findViewById(R.id.ok_button);
-                    phoneRequest.setView(view);
-                    AlertDialog dialog = phoneRequest.create();
-                    dialog.setCanceledOnTouchOutside(false);
-                    dialog.show();
-                    ok.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            String phone = getPhone.getText().toString();
-                            if (phone.isEmpty()){
-                                Toast.makeText(getApplicationContext(),"Please enter your phone number to continue", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                map.put("phone", phone);
-                                dialog.dismiss();
-
-                                map.put("profession", "Profession");
-                                map.put("UID", user.getUid());
-
-                                rootRef.child("Users").child(user.getDisplayName()).setValue(map);
-
-                                Intent intent =new Intent(MainActivity.this,DashBoard.class);
-                                startActivity(intent);
-                                finish();
-                            }
+                user = auth.getCurrentUser();
+                userDetailRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.child(user.getUid()).exists()){
+                            Intent intent = new Intent(MainActivity.this,DashBoard.class);
+                            startActivity(intent);
+                            finish();
+                        }else {
+                            dialog.show();
                         }
-                    });
-                }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         }).addOnFailureListener(this, new OnFailureListener() {
             @Override
@@ -242,39 +261,6 @@ public class MainActivity extends AppCompatActivity {
                                 SignInMethodQueryResult result = task.getResult();
                                 List<String> methods = result.getSignInMethods();
                                 ArrayList<String> signInMethods = new ArrayList<>(methods);
-//
-//                                AlertDialog.Builder signInoptions = new AlertDialog.Builder(MainActivity.this);
-//                                View view = getLayoutInflater().inflate(R.layout.sign_in_options,null);
-//                                TextView[] options = new TextView[signInMethods.size()];
-//                                LinearLayout layout = findViewById(R.id.methodsLayout);
-//
-//                                for (int i = 0; i < signInMethods.size(); i++) {
-//                                    options[i] = new TextView(MainActivity.this);
-//                                    options[i].setText(signInMethods.get(i));
-//                                    options[i].setTextSize(30);
-//                                    layout.addView(options[i]);
-//                                }
-//                                Button ok = new Button(MainActivity.this);
-//                                ok.setText("OK");
-//                                ok.setTextSize(30);
-//                                layout.addView(ok);
-//                                signInoptions.setView(view);
-//                                AlertDialog dialog = signInoptions.create();
-//                                dialog.setCanceledOnTouchOutside(false);
-//                                dialog.show();
-//                                ok.setOnClickListener(new View.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(View v) {
-//                                        dialog.dismiss();
-//                                    }
-//                                });
-
-/*                                Bundle intentBundle = new Bundle();
-                                intentBundle.putStringArrayList("key",signInMethods);
-
-                                Intent i = new Intent(MainActivity.this, LinkAccounts.class);
-                                i.putExtra("bundle", intentBundle);
-                                startActivity(i);*/
                             }else {
                                 Toast.makeText(MainActivity.this, task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                             }
@@ -296,11 +282,12 @@ public class MainActivity extends AppCompatActivity {
                             if (task.isSuccessful()){
                                 Toast.makeText(MainActivity.this,"Account Linking Successful!", Toast.LENGTH_SHORT).show();
                             }else {
-                                Toast.makeText(MainActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                                Toast.makeText( MainActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 Toast.makeText(MainActivity.this, "Authentication Success!", Toast.LENGTH_SHORT).show();
+                prevCredential = null;
 
                 Intent intent =new Intent(MainActivity.this,DashBoard.class);
                 startActivity(intent);

@@ -19,7 +19,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class DashBoard extends AppCompatActivity {
     private DrawerLayout navDrawer;
@@ -35,23 +34,23 @@ public class DashBoard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
-        navDrawer = (DrawerLayout) findViewById(R.id.dash);
-        imagelayout = (LinearLayout) findViewById(R.id.imagelayout);
+        navDrawer = findViewById(R.id.dash);
+        imagelayout = findViewById(R.id.imagelayout);
         navigationView = findViewById(R.id.lisofitems);
 
         //Bundle prof = getIntent().getExtras();
         String profession = "Working Professional";//prof.getString("Profession");
 
-        if(profession == "Profession"){ imagelayout.setBackgroundResource(R.drawable.defautlwallpaper);}
-        else if(profession == "Working Professional"){ imagelayout.setBackgroundResource(R.drawable.workingprofwallpaper);}
-        else if(profession == "Student"){ imagelayout.setBackgroundResource(R.drawable.studentwallpaper);}
+        if(profession.equals("Profession")){ imagelayout.setBackgroundResource(R.drawable.defautlwallpaper);}
+        else if(profession.equals("Working Professional")){ imagelayout.setBackgroundResource(R.drawable.workingprofwallpaper);}
+        else if(profession.equals("Student")){ imagelayout.setBackgroundResource(R.drawable.studentwallpaper);}
         else{ imagelayout.setBackgroundResource(R.drawable.homemakerwallpaper);}
 
 
         auth = FirebaseAuth.getInstance();
 
         logout = findViewById(R.id.logout);
-       navDrawer = (DrawerLayout) findViewById(R.id.dash);
+       navDrawer = findViewById(R.id.dash);
         toggle = new ActionBarDrawerToggle(this, navDrawer, R.string.open, R.string.close);
         navDrawer.addDrawerListener(toggle);
         toggle.syncState();

@@ -170,9 +170,9 @@ public class otpverification extends AppCompatActivity {
         redirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (phonedone == false) {
+                if (!phonedone) {
                     Toast.makeText(getApplicationContext(), "Please verify your Phone number", Toast.LENGTH_LONG).show();
-                } else if (maildone == false) {
+                } else if (!maildone) {
                     Toast.makeText(getApplicationContext(), "Please verify your Gmail", Toast.LENGTH_LONG).show();
                 } else {
                     registerUser(mailid, password, phone, profession, username);
@@ -189,16 +189,12 @@ public class otpverification extends AppCompatActivity {
                     Toast.makeText(otpverification.this, "Successful!", Toast.LENGTH_SHORT).show();
 
                     HashMap<String, Object> map = new HashMap<>();
-                    map.put("email", email);
-                    map.put("username", username);
                     map.put("phone", phone);
                     map.put("profession", profession);
-                    map.put("UID", auth.getCurrentUser().getUid());
 
-                    DBref.child("Users").child(username).setValue(map);
+                    DBref.child("Users").child(email).setValue(map);
 
                     Intent i = new Intent(otpverification.this, DashBoard.class);
-                    i.putExtra("Profession", profession);
                     startActivity(i);
                     finish();
                 } else {
