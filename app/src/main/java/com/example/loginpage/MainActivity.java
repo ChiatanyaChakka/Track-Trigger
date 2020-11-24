@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     private GoogleSignInOptions gso;
     private AuthCredential credential, prevCredential;
     private FirebaseUser user;
+//    private ArrayList<String> signInMethods;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -111,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
         builder.setCancelable(false);
         dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
-
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -199,7 +199,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     map.put("phone", txt_phone);
-                    Toast.makeText(MainActivity.this, "dialog dismissed", Toast.LENGTH_SHORT).show();
                     map.put("profession", profession);
                     userDetailRef.child(user.getUid()).setValue(map);
                     dialog.dismiss();
@@ -243,29 +242,35 @@ public class MainActivity extends AppCompatActivity {
         }).addOnFailureListener(this, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                FirebaseAuthUserCollisionException exception = ((FirebaseAuthUserCollisionException) e);
-                String errorCode = exception.getErrorCode();
 
-                if (errorCode.equals("ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL")) {
+                if (e instanceof FirebaseAuthUserCollisionException) {
+                    FirebaseAuthUserCollisionException exception = ((FirebaseAuthUserCollisionException) e);
                     String email = exception.getEmail();
                     prevCredential = currentCredential;
 //                    This can be used to get provider of currentCredential. To block the user from using it next time.
 //                    String provider = currentCredential.getProvider();
 
-                    Toast.makeText(MainActivity.this,errorCode,Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setCancelable(true);
+                    builder.setTitle("Sign-in Error");
+                    builder.setMessage(e.getMessage());
+                    AlertDialog dialog = builder.create();
 
                     auth.fetchSignInMethodsForEmail(email).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
                         @Override
                         public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
                             if (task.isSuccessful()){
-                                SignInMethodQueryResult result = task.getResult();
-                                List<String> methods = result.getSignInMethods();
-                                ArrayList<String> signInMethods = new ArrayList<>(methods);
+//                                SignInMethodQueryResult result = task.getResult();
+//                                List<String> methods = result.getSignInMethods();
+//                                signInMethods = new ArrayList<>(methods);
+                                dialog.show();
                             }else {
                                 Toast.makeText(MainActivity.this, task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
+                }else {
+                    Toast.makeText(MainActivity.this, e.getMessage(),Toast.LENGTH_SHORT).show();
                 }
             }
         });

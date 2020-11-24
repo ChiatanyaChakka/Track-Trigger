@@ -87,7 +87,7 @@ public class SigninPage extends AppCompatActivity {
 
             private boolean usernameOk(String text_username) {
                 verified = true;
-                Pattern pattern = Pattern.compile("[[A-Z]{1}[a-z]+\\s]+[[A-Z]{1}[a-z]+]");
+                Pattern pattern = Pattern.compile("([A-Z][a-z]\\s)*([A-Z][a-z]+)");
                 if (!Pattern.matches(String.valueOf(pattern),text_username)) {
                     verified = false;
                 }

@@ -28,9 +28,18 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Groceries extends AppCompatActivity {
 
@@ -41,12 +50,25 @@ public class Groceries extends AppCompatActivity {
     SimpleViewAdapter adapter;
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle toggle;
+    private Button save;
+
+    private HashMap<String,Integer> databaseImage;
+
+    private FirebaseUser user;
+    private DatabaseReference currentUserGroceriesRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groceries);
         search = findViewById(R.id.search);
+        save = findViewById(R.id.saveButton);
+
+        items = new ArrayList<String>();
+        databaseImage = new HashMap<>();
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        currentUserGroceriesRef = FirebaseDatabase.getInstance().getReference().child("Groceries").child(user.getUid());
 
         //Navigation Bar code start
         NavigationView navigationView = findViewById(R.id.navigationview);
@@ -60,8 +82,8 @@ public class Groceries extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if(id == R.id.trigger){
-                    Intent i = new Intent(getApplicationContext(), NewEventSetter.class);
-                    startActivity(i);
+//                    Intent i = new Intent(getApplicationContext(), NewEventSetter.class);
+//                    startActivity(i);
                 }
                 else if (id == R.id.dashboard){
                     Intent dashboard = new Intent(getApplicationContext(), DashBoard.class);
@@ -71,9 +93,16 @@ public class Groceries extends AppCompatActivity {
             }
         });
 
-        //Navigation bar code end
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HashMap<String,Object > map = new HashMap<>();
+                map.put(user.getUid(),databaseImage);   //need to give second argument as a map. key itemName and value itemCount.
+                currentUserGroceriesRef.getParent().setValue(map);
+            }
+        });
 
-        addItemstoList();
+        //Navigation bar code end
 
         groceries = findViewById(R.id.Groceries);
         adapter = new SimpleViewAdapter(this, R.layout.simple_row, items);
@@ -93,12 +122,27 @@ public class Groceries extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showcreatedialog();
-
-                //TODO: Add the new items to database
                 adapter.notifyDataSetChanged();
             }
         });
         groceries.setAdapter(adapter);
+
+        currentUserGroceriesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                items.clear();
+                for (DataSnapshot groceriesMap: snapshot.getChildren()) {
+                    databaseImage.put(groceriesMap.getKey(), Integer.parseInt(groceriesMap.getValue().toString()));
+                    items.add(groceriesMap.getKey());
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void showcreatedialog() {
@@ -124,29 +168,17 @@ public class Groceries extends AppCompatActivity {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(input.getText().toString() == ""){
+                if(input.getText().toString().equals("")){
                     Toast.makeText(getApplicationContext(), "Please enter some data", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     items.add(input.getText().toString());
-                    //TODO: Add a 0 to the quantity arraylist too
-                    //TODO: Add this new element to the database hashmap
+                    databaseImage.put(input.getText().toString(),0);
                     alertDialog.dismiss();
+                    save.performClick();
                 }
             }
         });
-    }
-
-    private void addItemstoList() {
-        items = new ArrayList<String>();
-
-        items.add("Tomato");
-        items.add("Banana");
-        items.add("Watermelon");
-        items.add("Sugar");
-        items.add("Snakes");
-        items.add("High");
-        //TODO: Add Method here to add items from database.. For now some dummy items are added.
     }
 
     private class SimpleViewAdapter  extends ArrayAdapter<String> {
@@ -180,6 +212,8 @@ public class Groceries extends AppCompatActivity {
                         count = Integer.parseInt(viewHolder.quantity.getText().toString());
                         count += 1;
                         viewHolder.quantity.setText(Integer.toString(count));
+                        databaseImage.remove(getItem(position));
+                        databaseImage.put(getItem(position),count);
                     }
                 });
                 viewHolder.decrease.setOnClickListener(new View.OnClickListener() {
@@ -189,14 +223,15 @@ public class Groceries extends AppCompatActivity {
                         count = Integer.parseInt(viewHolder.quantity.getText().toString());
                         count -= 1;
                         viewHolder.quantity.setText(Integer.toString(count));
+                        databaseImage.remove(getItem(position));
+                        databaseImage.put(getItem(position),count);
                     }
                 });
                 convertView.setTag(viewHolder);
             }
             mainviewholder = (ViewHolder) convertView.getTag();
             mainviewholder.itemname.setText(getItem(position));
-            //TODO: In the next commented we need to add quantities from the hashmap
-            //mainviewholder.quantity.setText();
+            mainviewholder.quantity.setText(databaseImage.get(getItem(position)).toString());
             return convertView;
         }
     }
@@ -205,6 +240,7 @@ public class Groceries extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if(item.getItemId() == R.id.sharing){
+            save.performClick();
             Intent share = new Intent(Intent.ACTION_SEND);
             share.putExtra(Intent.EXTRA_TEXT, createtextforsending());
             share.putExtra(Intent.EXTRA_SUBJECT, "All your Groceries");
@@ -226,9 +262,9 @@ public class Groceries extends AppCompatActivity {
 
     private String createtextforsending() {
         StringBuffer buffer = new StringBuffer();
-        for(String item: items){
-            buffer.append(item+"\n");
-            //TODO: Add quantities too
+        buffer.append("//Start of list//\n");
+        for(Map.Entry<String,Integer> item: databaseImage.entrySet()){
+            buffer.append(item.getKey()+" : "+item.getValue()+"\n");
         }
         buffer.append("//End of List//");
         return new String(buffer);
@@ -245,5 +281,9 @@ public class Groceries extends AppCompatActivity {
         Button decrease;
         Button increase;
         TextView quantity;
+    }
+
+    class GroceriesList{
+
     }
 }

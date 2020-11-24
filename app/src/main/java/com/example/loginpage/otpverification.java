@@ -21,10 +21,10 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -33,7 +33,7 @@ import java.util.HashMap;
 public class otpverification extends AppCompatActivity {
 
     private FirebaseAuth auth;
-    private DatabaseReference DBref;
+    private DatabaseReference rootRef;
 
     private EditText otpphone;
     private EditText otpmail;
@@ -76,7 +76,7 @@ public class otpverification extends AppCompatActivity {
         sender = new GmailSender("trackandtriggerr@gmail.com", "OOP@@T&T");
 
         auth = FirebaseAuth.getInstance();
-        DBref = FirebaseDatabase.getInstance().getReference();
+        rootRef = FirebaseDatabase.getInstance().getReference();
 
         Bundle userinfo = getIntent().getExtras();
         phone = userinfo.getString("PhoneNumber");
@@ -186,19 +186,41 @@ public class otpverification extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(otpverification.this, "Successful!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(otpverification.this, "Successful!", Toast.LENGTH_SHORT).show();
 
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("phone", phone);
                     map.put("profession", profession);
 
-                    DBref.child("Users").child(email).setValue(map);
+                    auth.signInWithEmailAndPassword(email,password);
+                    rootRef.child("Users").child(auth.getCurrentUser().getUid()).setValue(map);
+
+                    FirebaseUser user = auth.getCurrentUser();
+                    if(!user.isEmailVerified()){
+                        user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(otpverification.this,"Please check your mail for a verification Email.", Toast.LENGTH_LONG).show();
+
+                                Intent i = new Intent(otpverification.this, DashBoard.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        });
+                    }
 
                     Intent i = new Intent(otpverification.this, DashBoard.class);
                     startActivity(i);
                     finish();
                 } else {
-                    Toast.makeText(otpverification.this, "Failed!", Toast.LENGTH_SHORT).show();
+                    Exception e = task.getException();
+                    if (e instanceof FirebaseAuthUserCollisionException) {
+                        Toast.makeText(otpverification.this, e.getMessage()+" Please Sign-in with that account.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(otpverification.this, MainActivity.class);
+                        startActivity(intent);
+                    }else {
+                        Toast.makeText(otpverification.this,"Registeration Failed!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

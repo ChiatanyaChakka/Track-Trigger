@@ -161,44 +161,44 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/Facebook"
-        android:layout_width="77dp"
-        android:layout_height="69dp"
-        android:layout_marginStart="223dp"
-        android:layout_marginLeft="223dp"
-        android:layout_marginTop="576dp"
-        android:layout_marginEnd="82dp"
-        android:layout_marginRight="82dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:contentDescription="@string/facebooklogo"
-        android:focusable="true"
+    <GridLayout
+        android:layout_width="240dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="568dp"
+        android:layout_marginEnd="78dp"
+        android:layout_marginRight="78dp"
+        android:layout_marginBottom="11dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/facebook" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/Google"
-        android:layout_width="108dp"
-        android:layout_height="98dp"
-        android:layout_marginStart="82dp"
-        android:layout_marginLeft="82dp"
-        android:layout_marginTop="576dp"
-        android:layout_marginEnd="212dp"
-        android:layout_marginRight="212dp"
-        android:layout_marginBottom="18dp"
-        android:clickable="true"
-        android:contentDescription="@string/googlelogo"
-        android:focusable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.153"
-        app:srcCompat="@drawable/googlelogo" />
+
+        <ImageView
+            android:id="@+id/Google"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_marginRight="20dp"
+            android:clickable="true"
+            android:contentDescription="@string/googlelogo"
+            android:focusable="true"
+            app:srcCompat="@drawable/googlelogonew" />
+
+        <ImageView
+            android:id="@+id/Facebook"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:layout_marginLeft="20dp"
+            android:clickable="true"
+            android:contentDescription="@string/facebooklogo"
+            android:focusable="true"
+            app:srcCompat="@drawable/facebook" />
+    </GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

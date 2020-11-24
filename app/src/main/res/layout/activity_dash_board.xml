@@ -7,15 +7,110 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DashBoard">
+
     <LinearLayout
+        android:id="@+id/imagelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/imagelayout"
         android:orientation="horizontal" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="General"
+                android:textAlignment="center"
+                android:fontFamily="@font/advent_pro"
+                android:textColor="@color/blacktheme"
+                android:textSize="40dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/General"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp" >
+
+                <Button
+                    android:id="@+id/logout"
+                    android:text="logout"
+                    android:layout_width="105dp"
+                    android:layout_height="105dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"/>
+
+                <Button
+                    android:layout_width="105dp"
+                    android:layout_height="105dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"/>
+
+                <Button
+                    android:layout_width="105dp"
+                    android:layout_height="105dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Professional"
+                android:textAlignment="center"
+                android:textColor="@color/teal_200"
+                android:textSize="35dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/Professional"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Custom"
+                android:textAlignment="center"
+                android:textColor="@color/teal_200"
+                android:textSize="35dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/Custom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/button10"
@@ -26,39 +121,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="152dp"
-            android:layout_marginLeft="152dp"
-            android:layout_marginTop="279dp"
-            android:text="logout"
-            android:visibility="visible"
-            android:layout_marginEnd="153dp"
-            android:layout_marginRight="153dp"
-            android:layout_marginBottom="352dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/lisofitems"
-        app:headerLayout="@layout/header_for_drawer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_gravity="start"
         android:background="@color/white"
-        app:itemTextColor="#262626"
+        app:headerLayout="@layout/header_for_drawer"
         app:itemIconTint="#262626"
-        app:menu="@menu/drawer_menu"
-        android:layout_gravity = "start"
-        >
+        app:itemTextColor="#262626"
+        app:menu="@menu/drawer_menu">
 
 
     </com.google.android.material.navigation.NavigationView>
