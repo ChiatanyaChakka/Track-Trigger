@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:padding="15dp">
     <TextView
+        android:id="@+id/DialogText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Enter name of new item"
@@ -29,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_marginTop="15dp"
         android:layout_height="wrap_content"
-        android:text="Cancal"
+        android:text="Cancel"
         android:id="@+id/cancel"
         android:fontFamily="@font/advent_pro"/>
 

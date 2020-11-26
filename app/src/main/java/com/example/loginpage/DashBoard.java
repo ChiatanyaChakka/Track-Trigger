@@ -5,12 +5,16 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -23,19 +27,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.EventListener;
+import java.util.HashMap;
+import java.util.Objects;
 
 public class DashBoard extends AppCompatActivity {
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle toggle;
-    private Button testbutton;
-    private Button logout;
+    private Button GroceryButton;
     LinearLayout imagelayout;
     private NavigationView navigationView;
+    private Button[] customButton;
+    private Button[] professionalButton;
 
     private FirebaseAuth auth;
-    private DatabaseReference userRef;
+    private DatabaseReference rootRef, userRef, customSectionRef,profSectionRef;
 
     private String profession, phone;
+    private ArrayList<String> studentText, defaultText, workingText, homeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,25 +53,67 @@ public class DashBoard extends AppCompatActivity {
         navDrawer = findViewById(R.id.dash);
         imagelayout = findViewById(R.id.imagelayout);
         navigationView = findViewById(R.id.lisofitems);
-        logout = findViewById(R.id.logout);
+
+        createButtons();
 
         auth = FirebaseAuth.getInstance();
-        userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(auth.getCurrentUser().getUid());
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        userRef = rootRef.child("Users").child(auth.getCurrentUser().getUid());
+        customSectionRef = rootRef.child("DashBoard").child(auth.getCurrentUser().getUid());
+
+        customSectionRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int n = (int) snapshot.getChildrenCount();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    try {
+                        customButton[3 - (n--)].setText(Objects.requireNonNull(snap.getValue()).toString());
+                    }catch (NullPointerException e){
+                        ;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
 
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<String> userDetails = new ArrayList<>();
-                for (DataSnapshot details: snapshot.getChildren()){
+                for (DataSnapshot details : snapshot.getChildren()) {
                     userDetails.add(details.getValue().toString());
                 }
                 phone = userDetails.get(0);
                 profession = userDetails.get(1);
 
-                if(profession.equals("Default")){ imagelayout.setBackgroundResource(R.drawable.defautlwallpaper);}
-                else if(profession.equals("Working Professional")){ imagelayout.setBackgroundResource(R.drawable.workingprofwallpaper);}
-                else if(profession.equals("Student")){ imagelayout.setBackgroundResource(R.drawable.studentwallpaper);}
-                else{ imagelayout.setBackgroundResource(R.drawable.homemakerwallpaper);}
+                profSectionRef = rootRef.child("DashBoard").child("Professional");
+                profSectionRef.child(profession).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int i=0;
+                        for (DataSnapshot snap: snapshot.getChildren()) {
+                            professionalButton[i++].setText(snap.getValue().toString());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                if (profession.equals("Default")) {
+                    imagelayout.setBackgroundResource(R.drawable.defautlwallpaper);
+                } else if (profession.equals("Working Professional")) {
+                    imagelayout.setBackgroundResource(R.drawable.workingprofwallpaper);
+                } else if (profession.equals("Student")) {
+                    imagelayout.setBackgroundResource(R.drawable.studentwallpaper);
+                } else {
+                    imagelayout.setBackgroundResource(R.drawable.homemakerwallpaper);
+                }
             }
 
             @Override
@@ -80,11 +131,10 @@ public class DashBoard extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if(id == R.id.trigger){
+                if (id == R.id.trigger) {
 //                    Intent i = new Intent(getApplicationContext(), NewEventSetter.class);
 //                    startActivity(i);
-                }
-                else if (id == R.id.dashboard){
+                } else if (id == R.id.dashboard) {
                     Intent dashboard = new Intent(getApplicationContext(), DashBoard.class);
                     startActivity(dashboard);
                 }
@@ -92,8 +142,8 @@ public class DashBoard extends AppCompatActivity {
             }
         });
 
-        testbutton = findViewById(R.id.button10);
-        testbutton.setOnClickListener(new View.OnClickListener() {
+        GroceryButton = findViewById(R.id.GroceriesButton);
+        GroceryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(DashBoard.this, Groceries.class);
@@ -101,22 +151,116 @@ public class DashBoard extends AppCompatActivity {
             }
         });
 
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(DashBoard.this,"Signing out...", Toast.LENGTH_SHORT).show();
-                auth.signOut();
+    }
 
-                Intent intent = new Intent(DashBoard.this,MainActivity.class);
-                startActivity(intent);
-            }
-        });
+    private void createButtons() {
+
+        customButton = new Button[3];
+        customButton[0] = findViewById(R.id.Custom1);
+        customButton[1] = findViewById(R.id.Custom2);
+        customButton[2] = findViewById(R.id.Custom3);
+
+        for (Button b: customButton) {
+            b.setOnClickListener(listenerCustom);
+        }
+
+        professionalButton = new Button[3];
+        professionalButton[0] = findViewById(R.id.Professional1);
+        professionalButton[1] = findViewById(R.id.Professional2);
+        professionalButton[2] = findViewById(R.id.Professional3);
+
+        for (Button b:professionalButton) {
+            b.setOnClickListener(listenerProfessional);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(toggle.onOptionsItemSelected(item))
-            return true ;
+        if (toggle.onOptionsItemSelected(item))
+            return true;
         return super.onOptionsItemSelected(item);
     }
+
+    View.OnClickListener listenerProfessional = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(DashBoard.this, ProfessionActivity.class);
+            int id = v.getId();
+
+            switch (id) {
+                case R.id.Professional1:
+                    intent.putExtra("buttonNumber", "firstButt");
+                    break;
+                case  R.id.Professional2:
+                    intent.putExtra("buttonNumber", "secondButt");
+                    break;
+                case R.id.Professional3:
+                    intent.putExtra("buttonNumber", "thirdButt");
+                    break;
+            }
+
+            startActivity(intent);
+            finish();
+        }
+    };
+
+    View.OnClickListener listenerCustom = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(DashBoard.this,CustomActivity.class);
+            int id = v.getId();
+
+                switch (id) {
+                    case R.id.Custom1:
+                        intent.putExtra("buttonNumber", "firstButt");
+                        break;
+                    case R.id.Custom2:
+                        intent.putExtra("buttonNumber", "secondButt");
+                        break;
+                    case R.id.Custom3:
+                        intent.putExtra("buttonNumber", "thirdButt");
+                        break;
+                }
+
+            if (((Button)v).getText().equals("Add\nCustom\nButton")){
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(DashBoard.this);
+                dialogBuilder.setTitle("Add Custom Category");
+                View dialogView = getLayoutInflater().inflate(R.layout.dialog_for_adding, null);
+                dialogBuilder.setView(dialogView);
+                AlertDialog dialog = dialogBuilder.create();
+                dialog.setCanceledOnTouchOutside(false);
+
+                TextView view = dialogView.findViewById(R.id.DialogText);
+                view.setText("Enter new Category Name");
+                final EditText input = dialogView.findViewById(R.id.newitemname);
+                Button create = dialogView.findViewById(R.id.create);
+                Button cancel = dialogView.findViewById(R.id.cancel);
+                dialog.show();
+
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                create.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String s = input.getText().toString();
+                        if(s.equals("") || s == null){
+                            Toast.makeText(getApplicationContext(), "Please enter some data", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            ((Button)v).setText(s);
+                            dialog.dismiss();
+                        }
+                    }
+                });
+            }else {
+                startActivity(intent);
+                finish();
+            }
+        }
+    };
+
 }

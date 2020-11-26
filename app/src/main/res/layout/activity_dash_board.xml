@@ -40,37 +40,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:paddingHorizontal="20dp" >
+                android:paddingHorizontal="18dp" >
 
                 <Button
-                    android:id="@+id/logout"
-                    android:text="logout"
-                    android:layout_width="105dp"
-                    android:layout_height="105dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/rounded_button"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"/>
+                    android:id="@+id/GroceriesButton"
+                    android:text="Groceries"
+                    style="@style/CategoryButtons.LargeText"
+                    android:background="@drawable/rounded_button"/>
 
                 <Button
-                    android:layout_width="105dp"
-                    android:layout_height="105dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
+                    android:id="@+id/ApplianceButton"
+                    android:text="Appliances"
                     android:background="@drawable/rounded_button"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"/>
+                    style="@style/CategoryButtons.LargeText"/>
 
                 <Button
-                    android:layout_width="105dp"
-                    android:layout_height="105dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/rounded_button"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"/>
+                    android:id="@+id/HomeMaintenance"
+                    android:text="Home\nMaintenance"
+                    style="@style/CategoryButtons.LargeText"
+                    android:background="@drawable/rounded_button"/>
 
             </LinearLayout>
 
@@ -80,8 +70,9 @@
                 android:layout_gravity="center"
                 android:text="Professional"
                 android:textAlignment="center"
-                android:textColor="@color/teal_200"
-                android:textSize="35dp"
+                android:fontFamily="@font/advent_pro"
+                android:textColor="@color/blacktheme"
+                android:textSize="40dp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -89,8 +80,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:paddingHorizontal="20dp" />
+                android:paddingHorizontal="18dp" >
+
+                <Button
+                    android:id="@+id/Professional1"
+                    style="@style/CategoryButtons.LargeText"
+                    android:background="@drawable/rounded_button"/>
+
+                <Button
+                    android:id="@+id/Professional2"
+                    style="@style/CategoryButtons.LargeText"
+                    android:background="@drawable/rounded_button"/>
+
+                <Button
+                    android:id="@+id/Professional3"
+                    style="@style/CategoryButtons.LargeText"
+                    android:background="@drawable/rounded_button"/>
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -98,28 +107,41 @@
                 android:layout_gravity="center"
                 android:text="Custom"
                 android:textAlignment="center"
-                android:textColor="@color/teal_200"
-                android:textSize="35dp"
+                android:fontFamily="@font/advent_pro"
+                android:textColor="@color/blacktheme"
+                android:textSize="40dp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/Custom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:layout_gravity="center"
                 android:orientation="horizontal"
-                android:paddingHorizontal="20dp" />
+                android:paddingHorizontal="18dp" >
+
+                <Button
+                    android:id="@+id/Custom1"
+                    android:text="Add\nCustom\nButton"
+                    style="@style/CategoryButtons.LargeText"
+                    android:background="@drawable/rounded_button"/>
+
+                <Button
+                    android:id="@+id/Custom2"
+                    android:text="Add\nCustom\nButton"
+                    style="@style/CategoryButtons.LargeText"
+                    android:background="@drawable/rounded_button"/>
+
+                <Button
+                    android:id="@+id/Custom3"
+                    android:text="Add\nCustom\nButton"
+                    style="@style/CategoryButtons.LargeText"
+                    android:background="@drawable/rounded_button"/>
+
+            </LinearLayout>
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/button10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

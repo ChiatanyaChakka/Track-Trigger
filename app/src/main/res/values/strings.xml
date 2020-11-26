@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Track and Trigger</string>
 
-<!--    <string name="default_web_client_id">56790523571-848skliamfj9m8sglq1v3b4189th3ulq.apps.googleusercontent.com</string>-->
+    <!--    <string name="default_web_client_id">56790523571-848skliamfj9m8sglq1v3b4189th3ulq.apps.googleusercontent.com</string>-->
 
     <string name="facebook_app_id">1259176907790320</string>
     <string name="fb_login_protocol_scheme">fb1259176907790320</string>

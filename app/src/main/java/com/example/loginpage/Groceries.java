@@ -55,7 +55,7 @@ public class Groceries extends AppCompatActivity {
     private HashMap<String,Integer> databaseImage;
 
     private FirebaseUser user;
-    private DatabaseReference currentUserGroceriesRef;
+    private DatabaseReference rootRef, currentUserGroceriesRef, groceriesRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,9 @@ public class Groceries extends AppCompatActivity {
         databaseImage = new HashMap<>();
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        currentUserGroceriesRef = FirebaseDatabase.getInstance().getReference().child("Groceries").child(user.getUid());
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        groceriesRef = rootRef.child("Groceries");
+        currentUserGroceriesRef = groceriesRef.child(user.getUid());
 
         //Navigation Bar code start
         NavigationView navigationView = findViewById(R.id.navigationview);
@@ -98,7 +100,7 @@ public class Groceries extends AppCompatActivity {
             public void onClick(View v) {
                 HashMap<String,Object > map = new HashMap<>();
                 map.put(user.getUid(),databaseImage);   //need to give second argument as a map. key itemName and value itemCount.
-                currentUserGroceriesRef.getParent().setValue(map);
+                groceriesRef.updateChildren(map);
             }
         });
 
