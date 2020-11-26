@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,6 +51,7 @@ public class Groceries extends AppCompatActivity {
     SimpleViewAdapter adapter;
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle toggle;
+    private FirebaseAuth auth;
     private Button save;
 
     private HashMap<String,Integer> databaseImage;
@@ -62,6 +64,7 @@ public class Groceries extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groceries);
         search = findViewById(R.id.search);
+        auth = FirebaseAuth.getInstance();
         save = findViewById(R.id.saveButton);
 
         items = new ArrayList<String>();
@@ -84,17 +87,28 @@ public class Groceries extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if(id == R.id.trigger){
+                    Intent i = new Intent(getApplicationContext(), TriggerActivity.class);
+                    startActivity(i);
+                    finish();
 //                    Intent i = new Intent(getApplicationContext(), NewEventSetter.class);
 //                    startActivity(i);
                 }
                 else if (id == R.id.dashboard){
                     Intent dashboard = new Intent(getApplicationContext(), DashBoard.class);
                     startActivity(dashboard);
+                    finish();
+                }
+                else if (id == R.id.logout){
+                    auth.signOut();
+                    Toast.makeText(getApplicationContext(),"Signing out...", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return true;
             }
         });
-
+        //Navigation bar code end
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,7 +118,7 @@ public class Groceries extends AppCompatActivity {
             }
         });
 
-        //Navigation bar code end
+
 
         groceries = findViewById(R.id.Groceries);
         adapter = new SimpleViewAdapter(this, R.layout.simple_row, items);
@@ -285,7 +299,5 @@ public class Groceries extends AppCompatActivity {
         TextView quantity;
     }
 
-    class GroceriesList{
 
-    }
 }

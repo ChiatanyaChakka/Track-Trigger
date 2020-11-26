@@ -25,6 +25,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -201,6 +202,8 @@ public class otpverification extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 Toast.makeText(otpverification.this,"Please check your mail for a verification Email.", Toast.LENGTH_LONG).show();
+                    //DBref.child("Users").child(username).setValue(map);
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
 
                                 Intent i = new Intent(otpverification.this, DashBoard.class);
                                 startActivity(i);
@@ -210,6 +213,7 @@ public class otpverification extends AppCompatActivity {
                     }
 
                     Intent i = new Intent(otpverification.this, DashBoard.class);
+                    //Intent i = new Intent(otpverification.this, MainActivity.class);
                     startActivity(i);
                     finish();
                 } else {

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
-    android:id="@+id/dash"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DashBoard">
@@ -28,9 +27,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:fontFamily="@font/advent_pro"
                 android:text="General"
                 android:textAlignment="center"
-                android:fontFamily="@font/advent_pro"
                 android:textColor="@color/blacktheme"
                 android:textSize="40dp"
                 android:textStyle="bold" />
@@ -42,25 +41,25 @@
                 android:layout_gravity="center"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:paddingHorizontal="18dp" >
+                android:paddingHorizontal="18dp">
 
                 <Button
                     android:id="@+id/GroceriesButton"
-                    android:text="Groceries"
                     style="@style/CategoryButtons.LargeText"
-                    android:background="@drawable/rounded_button"/>
+                    android:background="@drawable/rounded_button"
+                    android:text="Groceries" />
 
                 <Button
                     android:id="@+id/ApplianceButton"
-                    android:text="Appliances"
+                    style="@style/CategoryButtons.LargeText"
                     android:background="@drawable/rounded_button"
-                    style="@style/CategoryButtons.LargeText"/>
+                    android:text="Appliances" />
 
                 <Button
                     android:id="@+id/HomeMaintenance"
-                    android:text="Home\nMaintenance"
                     style="@style/CategoryButtons.LargeText"
-                    android:background="@drawable/rounded_button"/>
+                    android:background="@drawable/rounded_button"
+                    android:text="Home\nMaintenance" />
 
             </LinearLayout>
 
@@ -68,9 +67,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:fontFamily="@font/advent_pro"
                 android:text="Professional"
                 android:textAlignment="center"
-                android:fontFamily="@font/advent_pro"
                 android:textColor="@color/blacktheme"
                 android:textSize="40dp"
                 android:textStyle="bold" />
@@ -82,22 +81,22 @@
                 android:layout_gravity="center"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:paddingHorizontal="18dp" >
+                android:paddingHorizontal="18dp">
 
                 <Button
                     android:id="@+id/Professional1"
                     style="@style/CategoryButtons.LargeText"
-                    android:background="@drawable/rounded_button"/>
+                    android:background="@drawable/rounded_button" />
 
                 <Button
                     android:id="@+id/Professional2"
                     style="@style/CategoryButtons.LargeText"
-                    android:background="@drawable/rounded_button"/>
+                    android:background="@drawable/rounded_button" />
 
                 <Button
                     android:id="@+id/Professional3"
                     style="@style/CategoryButtons.LargeText"
-                    android:background="@drawable/rounded_button"/>
+                    android:background="@drawable/rounded_button" />
 
             </LinearLayout>
 
@@ -105,9 +104,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:fontFamily="@font/advent_pro"
                 android:text="Custom"
                 android:textAlignment="center"
-                android:fontFamily="@font/advent_pro"
                 android:textColor="@color/blacktheme"
                 android:textSize="40dp"
                 android:textStyle="bold" />
@@ -116,28 +115,28 @@
                 android:id="@+id/Custom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:baselineAligned="false"
                 android:layout_gravity="center"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:paddingHorizontal="18dp" >
+                android:paddingHorizontal="18dp">
 
                 <Button
                     android:id="@+id/Custom1"
-                    android:text="Add\nCustom\nButton"
                     style="@style/CategoryButtons.LargeText"
-                    android:background="@drawable/rounded_button"/>
+                    android:background="@drawable/rounded_button"
+                    android:text="Add\nCustom\nButton" />
 
                 <Button
                     android:id="@+id/Custom2"
-                    android:text="Add\nCustom\nButton"
                     style="@style/CategoryButtons.LargeText"
-                    android:background="@drawable/rounded_button"/>
+                    android:background="@drawable/rounded_button"
+                    android:text="Add\nCustom\nButton" />
 
                 <Button
                     android:id="@+id/Custom3"
-                    android:text="Add\nCustom\nButton"
                     style="@style/CategoryButtons.LargeText"
-                    android:background="@drawable/rounded_button"/>
+                    android:background="@drawable/rounded_button"
+                    android:text="Add\nCustom\nButton" />
 
             </LinearLayout>
 

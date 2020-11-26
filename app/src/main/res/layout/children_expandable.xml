@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/childlayout"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:padding="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center"
+            android:id="@+id/itemimagechild"/>
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:orientation="vertical">
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:textColor="#000000"
+               android:text="Title"
+               android:fontFamily="@font/advent_pro"
+               android:id="@+id/titlechild"
+               android:textSize="30dp"
+               android:layout_margin="10dp"/>
+           <TextView
+               android:id="@+id/categorychild"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:textColor="#000000"
+               android:textSize="14dp"
+               android:fontFamily="@font/advent_pro"
+               android:layout_margin="10dp"
+               android:text="Category" />
+
+       </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="85dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+            <ImageButton
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:background="#F8F6F6"
+                android:id="@+id/sharebuttonexpand"
+                android:src="@android:drawable/ic_menu_send"
+                android:tooltipText="Share"/>
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17dp"
+                android:textColor="#000000"
+                android:fontFamily="@font/advent_pro"
+                android:text="Share"/>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:fontFamily="@font/advent_pro"
+            android:text="Status/Notes: "/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:padding="5dp"
+            android:id="@+id/statusornotesofchild"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:fontFamily="@font/advent_pro"
+            android:text="This is the status or the notes the user wants to enter for the appliance. This will be a multiline text"
+            android:inputType="textMultiLine"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,12 +1,6 @@
 package com.example.loginpage;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,8 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.navigation.NavigationView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,8 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class DashBoard extends AppCompatActivity {
@@ -50,8 +46,9 @@ public class DashBoard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
+        navDrawer = (DrawerLayout) findViewById(R.id.dash);
+        imagelayout = (LinearLayout) findViewById(R.id.imagelayout);
         navDrawer = findViewById(R.id.dash);
-        imagelayout = findViewById(R.id.imagelayout);
         navigationView = findViewById(R.id.lisofitems);
 
         createButtons();
@@ -131,12 +128,22 @@ public class DashBoard extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if (id == R.id.trigger) {
-//                    Intent i = new Intent(getApplicationContext(), NewEventSetter.class);
-//                    startActivity(i);
-                } else if (id == R.id.dashboard) {
+                if(id == R.id.trigger){
+                    Intent i = new Intent(getApplicationContext(), TriggerActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+                else if (id == R.id.dashboard) {
                     Intent dashboard = new Intent(getApplicationContext(), DashBoard.class);
                     startActivity(dashboard);
+                    finish();
+                }
+                else if (id == R.id.logout){
+                    auth.signOut();
+                    Toast.makeText(DashBoard.this,"Signing out...", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return true;
             }
@@ -148,6 +155,7 @@ public class DashBoard extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(DashBoard.this, Groceries.class);
                 startActivity(i);
+                finish();
             }
         });
 

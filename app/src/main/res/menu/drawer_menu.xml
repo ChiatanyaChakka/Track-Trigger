@@ -4,5 +4,5 @@
     <item android:id="@+id/profile" android:title="Profile" android:icon="@drawable/ic_user"/>
     <item android:id="@+id/track" android:title="Track" android:icon="@drawable/ic_to_do_list"/>
     <item android:id="@+id/trigger" android:title="Trigger" android:icon="@drawable/ic_alarm"/>
-    <item android:id="@+id/settings" android:title="Settings" android:icon="@drawable/ic_settings"/>
+    <item android:id="@+id/logout" android:title="Logout" android:icon="@drawable/ic_logout"/>
 </menu>
