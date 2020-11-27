@@ -8,16 +8,6 @@
     tools:context=".TriggerActivity"
     android:background = "#FFD647">
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/lisofitems"
-        app:headerLayout="@layout/header_for_drawer"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        app:itemTextColor="#262626"
-        app:itemIconTint="#262626"
-        app:menu="@menu/drawer_menu"
-        android:layout_gravity = "start"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -50,6 +40,20 @@
             android:contentDescription="Add new event" />
 
     </RelativeLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/lisofitems"
+        app:headerLayout="@layout/header_for_drawer"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:itemTextColor="#262626"
+        app:itemIconTint="#262626"
+        app:menu="@menu/drawer_menu"
+        android:layout_gravity = "start">
+
+    </com.google.android.material.navigation.NavigationView>
+
 
 
 
