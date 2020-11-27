@@ -22,7 +22,8 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="320dp"
+        android:id="@+id/newappliancebutton"
+        android:layout_gravity="center"
         android:src="@android:drawable/ic_input_add" />
 
 </LinearLayout>

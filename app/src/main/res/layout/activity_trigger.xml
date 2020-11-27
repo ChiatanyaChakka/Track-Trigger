@@ -27,17 +27,17 @@
         </ListView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addnewevent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="19dp"
-            android:layout_marginRight="19dp"
-            android:layout_marginBottom="14dp"
-            android:id="@+id/addnewevent"
-            android:src="@android:drawable/ic_input_add"
-            android:contentDescription="Add new event" />
+            android:layout_marginEnd="167dp"
+            android:layout_marginRight="167dp"
+            android:layout_marginBottom="23dp"
+            android:contentDescription="Add new event"
+            android:src="@android:drawable/ic_input_add" />
 
     </RelativeLayout>
 

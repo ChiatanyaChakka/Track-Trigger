@@ -14,15 +14,15 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
-        <activity android:name=".Appliances"></activity>
+        <activity android:name=".newApplicanceActivity"></activity>
+        <activity android:name=".Appliances" />
         <activity android:name=".TriggerActivity" />
         <activity android:name=".NewEventSetter" />
         <activity
             android:name=".Groceries"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".ProfessionActivity"></activity>
+        <activity android:name=".ProfessionActivity" />
         <activity android:name=".CustomActivity" />
-        
         <activity android:name=".otpverification" />
         <activity android:name=".LinkAccounts" />
 
