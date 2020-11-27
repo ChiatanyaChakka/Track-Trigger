@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -69,6 +70,7 @@ public class Groceries extends AppCompatActivity {
 
         items = new ArrayList<String>();
         databaseImage = new HashMap<>();
+        adapter = new SimpleViewAdapter(this, R.layout.simple_row, items);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         rootRef = FirebaseDatabase.getInstance().getReference();
@@ -109,19 +111,8 @@ public class Groceries extends AppCompatActivity {
             }
         });
         //Navigation bar code end
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HashMap<String,Object > map = new HashMap<>();
-                map.put(user.getUid(),databaseImage);   //need to give second argument as a map. key itemName and value itemCount.
-                groceriesRef.updateChildren(map);
-            }
-        });
-
-
 
         groceries = findViewById(R.id.Groceries);
-        adapter = new SimpleViewAdapter(this, R.layout.simple_row, items);
 
         //Search bar started
         search.addTextChangedListener(new TextWatcher() {
@@ -147,6 +138,7 @@ public class Groceries extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 items.clear();
+                databaseImage.clear();
                 for (DataSnapshot groceriesMap: snapshot.getChildren()) {
                     databaseImage.put(groceriesMap.getKey(), Integer.parseInt(groceriesMap.getValue().toString()));
                     items.add(groceriesMap.getKey());
@@ -157,6 +149,15 @@ public class Groceries extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HashMap<String,Object > map = new HashMap<>();
+                map.put(user.getUid(),databaseImage);   //need to give second argument as a map. key itemName and value itemCount.
+                groceriesRef.updateChildren(map);
             }
         });
     }
@@ -195,6 +196,12 @@ public class Groceries extends AppCompatActivity {
                 }
             }
         });
+
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+            }
+        });
     }
 
     private class SimpleViewAdapter  extends ArrayAdapter<String> {
@@ -230,6 +237,8 @@ public class Groceries extends AppCompatActivity {
                         viewHolder.quantity.setText(Integer.toString(count));
                         databaseImage.remove(getItem(position));
                         databaseImage.put(getItem(position),count);
+                        System.out.println(getItem(position));
+                        notifyDataSetChanged();
                     }
                 });
                 viewHolder.decrease.setOnClickListener(new View.OnClickListener() {
@@ -241,6 +250,7 @@ public class Groceries extends AppCompatActivity {
                         viewHolder.quantity.setText(Integer.toString(count));
                         databaseImage.remove(getItem(position));
                         databaseImage.put(getItem(position),count);
+                        notifyDataSetChanged();
                     }
                 });
                 convertView.setTag(viewHolder);

@@ -184,11 +184,6 @@ public class DashBoard extends AppCompatActivity {
         customButton[1] = findViewById(R.id.Custom2);
         customButton[2] = findViewById(R.id.Custom3);
 
-        for (Button b : customButton) {
-            b.setOnClickListener(listenerCustom);
-            b.setText("Add\nCustom\nButton");
-        }
-
         professionalButton = new Button[3];
         professionalButton[0] = findViewById(R.id.Professional1);
         professionalButton[1] = findViewById(R.id.Professional2);
