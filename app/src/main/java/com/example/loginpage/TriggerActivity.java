@@ -76,7 +76,6 @@ public class TriggerActivity extends AppCompatActivity {
                 else if (id == R.id.dashboard){
                     Intent dashboard = new Intent(getApplicationContext(), DashBoard.class);
                     startActivity(dashboard);
-                    Toast.makeText(getApplicationContext(), "Dashoardintent", Toast.LENGTH_LONG).show();
                     finish();
                 }
                 else if (id == R.id.logout){
