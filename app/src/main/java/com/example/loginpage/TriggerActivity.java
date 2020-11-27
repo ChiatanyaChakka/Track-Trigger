@@ -41,7 +41,6 @@ public class TriggerActivity extends AppCompatActivity {
     ArrayList<String> eventtitlesG;
     HashMap<String, HashMap<String, String>> map;
     private DatabaseReference rootref, triggerref;
-    NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,26 +56,8 @@ public class TriggerActivity extends AppCompatActivity {
         eventslist.setAdapter(adapterForEvents);
         //ListView for events end
 
-        rootref = FirebaseDatabase.getInstance().getReference();
-        triggerref = rootref.child("Trigger").child(auth.getCurrentUser().getUid());
-        triggerref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot snap: snapshot.getChildren()){
-                    eventtitlesG.add(snap.getKey());
-                    map.put(snap.getKey(), (HashMap)snap.getValue());
-                    System.out.println(snap.getKey());
-                }
-                adapterForEvents.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
         //Navigation Bar code start
+        NavigationView navigationView;
         navigationView = findViewById(R.id.lisofitems);
         navDrawer = (DrawerLayout) findViewById(R.id.triggernav);
         toggle = new ActionBarDrawerToggle(this, navDrawer, R.string.open, R.string.close);
@@ -109,6 +90,25 @@ public class TriggerActivity extends AppCompatActivity {
             }
         });
         //Navigation bar code end
+
+        rootref = FirebaseDatabase.getInstance().getReference();
+        triggerref = rootref.child("Trigger").child(auth.getCurrentUser().getUid());
+        triggerref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap: snapshot.getChildren()){
+                    eventtitlesG.add(snap.getKey());
+                    map.put(snap.getKey(), (HashMap)snap.getValue());
+                    System.out.println(snap.getKey());
+                }
+                adapterForEvents.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         newevent.setOnClickListener(new View.OnClickListener() {
             @Override

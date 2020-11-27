@@ -30,17 +30,16 @@ import java.util.Objects;
 public class DashBoard extends AppCompatActivity {
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle toggle;
-    private Button GroceryButton;
-    LinearLayout imagelayout;
+    private LinearLayout imagelayout;
     private NavigationView navigationView;
+    private Button GroceryButton, ApplianceButton, HomeMaintButton;
     private Button[] customButton;
     private Button[] professionalButton;
 
     private FirebaseAuth auth;
-    private DatabaseReference rootRef, userRef, customSectionRef,profSectionRef;
+    private DatabaseReference rootRef, userRef, customSectionRef, profSectionRef;
 
     private String profession, phone;
-    private ArrayList<String> studentText, defaultText, workingText, homeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +64,7 @@ public class DashBoard extends AppCompatActivity {
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     try {
                         customButton[3 - (n--)].setText(Objects.requireNonNull(snap.getValue()).toString());
-                    }catch (NullPointerException e){
+                    } catch (NullPointerException e) {
                         ;
                     }
                 }
@@ -90,8 +89,8 @@ public class DashBoard extends AppCompatActivity {
                 profSectionRef.child(profession).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        int i=0;
-                        for (DataSnapshot snap: snapshot.getChildren()) {
+                        int i = 0;
+                        for (DataSnapshot snap : snapshot.getChildren()) {
                             professionalButton[i++].setText(snap.getValue().toString());
                         }
                     }
@@ -128,20 +127,18 @@ public class DashBoard extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if(id == R.id.trigger){
+                if (id == R.id.trigger) {
                     Intent i = new Intent(getApplicationContext(), TriggerActivity.class);
                     startActivity(i);
                     finish();
-                }
-                else if (id == R.id.dashboard) {
+                } else if (id == R.id.dashboard) {
                     Intent dashboard = new Intent(getApplicationContext(), DashBoard.class);
                     startActivity(dashboard);
                     finish();
-                }
-                else if (id == R.id.logout){
+                } else if (id == R.id.logout) {
                     auth.signOut();
-                    Toast.makeText(DashBoard.this,"Signing out...", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    Toast.makeText(DashBoard.this, "Signing out...", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -159,6 +156,25 @@ public class DashBoard extends AppCompatActivity {
             }
         });
 
+        ApplianceButton = findViewById(R.id.ApplianceButton);
+        ApplianceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(DashBoard.this, Appliances.class);
+                startActivity(i);
+                finish();
+            }
+        });
+
+        HomeMaintButton = findViewById(R.id.ApplianceButton);
+        HomeMaintButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(DashBoard.this, Appliances.class);
+                startActivity(i);
+                finish();
+            }
+        });
     }
 
     private void createButtons() {
@@ -168,8 +184,9 @@ public class DashBoard extends AppCompatActivity {
         customButton[1] = findViewById(R.id.Custom2);
         customButton[2] = findViewById(R.id.Custom3);
 
-        for (Button b: customButton) {
+        for (Button b : customButton) {
             b.setOnClickListener(listenerCustom);
+            b.setText("Add\nCustom\nButton");
         }
 
         professionalButton = new Button[3];
@@ -177,7 +194,7 @@ public class DashBoard extends AppCompatActivity {
         professionalButton[1] = findViewById(R.id.Professional2);
         professionalButton[2] = findViewById(R.id.Professional3);
 
-        for (Button b:professionalButton) {
+        for (Button b : professionalButton) {
             b.setOnClickListener(listenerProfessional);
         }
     }
@@ -199,7 +216,7 @@ public class DashBoard extends AppCompatActivity {
                 case R.id.Professional1:
                     intent.putExtra("buttonNumber", "firstButt");
                     break;
-                case  R.id.Professional2:
+                case R.id.Professional2:
                     intent.putExtra("buttonNumber", "secondButt");
                     break;
                 case R.id.Professional3:
@@ -215,22 +232,22 @@ public class DashBoard extends AppCompatActivity {
     View.OnClickListener listenerCustom = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(DashBoard.this,CustomActivity.class);
+            Intent intent = new Intent(DashBoard.this, CustomActivity.class);
             int id = v.getId();
 
-                switch (id) {
-                    case R.id.Custom1:
-                        intent.putExtra("buttonNumber", "firstButt");
-                        break;
-                    case R.id.Custom2:
-                        intent.putExtra("buttonNumber", "secondButt");
-                        break;
-                    case R.id.Custom3:
-                        intent.putExtra("buttonNumber", "thirdButt");
-                        break;
-                }
+            switch (id) {
+                case R.id.Custom1:
+                    intent.putExtra("buttonNumber", "firstButt");
+                    break;
+                case R.id.Custom2:
+                    intent.putExtra("buttonNumber", "secondButt");
+                    break;
+                case R.id.Custom3:
+                    intent.putExtra("buttonNumber", "thirdButt");
+                    break;
+            }
 
-            if (((Button)v).getText().equals("Add\nCustom\nButton")){
+            if (((Button) v).getText().equals("Add\nCustom\nButton")) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(DashBoard.this);
                 dialogBuilder.setTitle("Add Custom Category");
                 View dialogView = getLayoutInflater().inflate(R.layout.dialog_for_adding, null);
@@ -255,16 +272,16 @@ public class DashBoard extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         String s = input.getText().toString();
-                        if(s.equals("") || s == null){
+                        System.out.println(s);
+                        if (s.equals("") || s == null) {
                             Toast.makeText(getApplicationContext(), "Please enter some data", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            ((Button)v).setText(s);
+                        } else {
+                            ((Button) v).setText(s);
                             dialog.dismiss();
                         }
                     }
                 });
-            }else {
+            } else {
                 startActivity(intent);
                 finish();
             }
