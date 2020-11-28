@@ -1,15 +1,15 @@
 package com.example.loginpage;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class ProfileActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
-    private DatabaseReference rootRef, userRef;
+    private DatabaseReference rootRef, userRef, userNameRef;
     private TextView name, email, phone, profession;
     private ArrayList<String> userDetails;
     private DrawerLayout navDrawer;
@@ -40,13 +40,29 @@ public class ProfileActivity extends AppCompatActivity {
         FirebaseUser user = auth.getCurrentUser();
         rootRef = FirebaseDatabase.getInstance().getReference();
         userRef = rootRef.child("Users").child(user.getUid());
+        userNameRef = rootRef.child("Usernames").child(user.getUid());
 
         name = findViewById(R.id.ProfileName);
         profession = findViewById(R.id.ProfileProfession);
         phone = findViewById(R.id.ProfileNumber);
         email = findViewById(R.id.ProfileEmail);
 
-        name.setText(user.getDisplayName());
+        userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    name.setText(snapshot.getValue(String.class));
+                } else {
+                    name.setText(user.getDisplayName());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         email.setText(user.getEmail());
 
         userDetails = new ArrayList<>();
@@ -54,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap: snapshot.getChildren()){
+                for (DataSnapshot snap : snapshot.getChildren()) {
                     userDetails.add(snap.getValue(String.class));
                 }
 

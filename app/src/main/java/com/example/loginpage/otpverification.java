@@ -132,20 +132,6 @@ public class otpverification extends AppCompatActivity {
                 OTPmail = genOTP();
 
                 new MyAsyncClass().execute();
-                // This code is for sharing... Not required for now
-                /*Intent emailintent = new Intent(Intent.ACTION_SEND);
-                emailintent.setData(Uri.parse("mailto:"));
-                emailintent.setType("text/plain");
-                emailintent.putExtra(Intent.EXTRA_EMAIL, mailid);
-                emailintent.putExtra(Intent.EXTRA_SUBJECT, "OTP for Track and Trigger");
-                emailintent.putExtra(Intent.EXTRA_TEXT, "Never share your One-Time-Password with anyone\nYour OTP for track and trigger is "+Integer.toString(OTPmail));
-                emailintent.putExtra(Intent.EXTRA_TITLE, "Track and Trigger");
-                try {
-                    startActivity(Intent.createChooser(emailintent, "Send mail..."));
-                    finish();
-                } catch (android.content.ActivityNotFoundException ex) {
-                    Toast.makeText(otpverification.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
-                }*/
             }
         });
 
@@ -235,6 +221,7 @@ public class otpverification extends AppCompatActivity {
         for (int i = 1; i <= 3; i++) {
             dashBoard.child(String.valueOf(i)).setValue("Add\nCustom\nButton");
         }
+        rootRef.child("Usernames").child(auth.getCurrentUser().getUid()).setValue(username);
     }
 
     private int genOTP() {

@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.SET_ALARM"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +19,9 @@
         android:roundIcon="@mipmap/logox"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
+        <activity android:name=".NewMaintainanceActivity"></activity>
+        <activity android:name=".HomeMaintanence" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -24,10 +29,10 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity" />
         <activity android:name=".newApplicanceActivity" />
         <activity android:name=".Appliances" />
         <activity android:name=".TriggerActivity" />
@@ -80,6 +85,5 @@
             android:enabled="true"
             android:exported="true"/>
     </application>
-
 
 </manifest>

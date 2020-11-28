@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="#ffd647"
-    android:id="@+id/ApplianceDrawer"
+    android:id="@+id/MaintanenceDrawer"
     android:layout_height="match_parent"
     tools:context=".Appliances">
 
@@ -13,7 +13,7 @@
         android:layout_height="match_parent">
 
         <ExpandableListView
-            android:id="@+id/applianceslistexpandable"
+            android:id="@+id/maintainancelistexpandable"
             android:layout_width="0dp"
             android:layout_height="565dp"
             android:layout_marginTop="56dp"
@@ -30,7 +30,7 @@
         </ExpandableListView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/newappliancebutton"
+            android:id="@+id/newmaintainancebutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

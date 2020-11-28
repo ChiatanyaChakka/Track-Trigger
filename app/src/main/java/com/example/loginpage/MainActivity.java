@@ -22,9 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
 import com.facebook.login.LoginManager;
-
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -49,10 +48,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText email;
     private EditText password;
     private Button login;
-    private Button test;
     private ImageView facebook;
     private ImageView google;
     private AlertDialog dialog;
@@ -124,21 +120,10 @@ public class MainActivity extends AppCompatActivity {
         userDetailRef = rootRef.child("Users");
         map = new HashMap<>();
 
-        test = findViewById(R.id.testButton);
-        test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent p = new Intent(MainActivity.this, DashBoard.class);
-                p.putExtra("Profession", "Profession");
-                startActivity(p);
-            }
-        });
-
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
-                Toast.makeText(MainActivity.this, "Credential fetched!", Toast.LENGTH_SHORT).show();
                 if(prevCredential != null) {
                     SignInWithCredential(credential, prevCredential);
                 }else {

@@ -15,9 +15,11 @@
     <style name="CategoryButtons.LargeText">
 
         <item name="android:textSize">15dp</item>
-<!--        <item name="autoSizeTextType">uniform</item>-->
+        <!--        <item name="autoSizeTextType">uniform</item>-->
         <item name="textAllCaps">false</item>
         <item name="singleLine">true</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="backgroundTint">@color/blacktheme</item>
     </style>
 
 </resources>
