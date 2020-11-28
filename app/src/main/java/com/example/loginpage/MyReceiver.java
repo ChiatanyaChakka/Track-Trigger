@@ -1,37 +1,60 @@
 package com.example.loginpage;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.provider.Telephony;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MyReceiver extends BroadcastReceiver {
 
     GmailSender sender;
     private FirebaseUser user;
+    private DatabaseReference rootRef, userNameRef;
+    private String username;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         user = FirebaseAuth.getInstance().getCurrentUser();
         String phonenum = intent.getExtras().getString("phone num");
         String docList = intent.getExtras().getString("description");
-        String username = user.getDisplayName();
-        if(username.equals(""))
-            username = "User";
+
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        userNameRef = rootRef.child("Usernames").child(user.getUid());
+
+        userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    username = snapshot.getValue(String.class);
+                } else {
+                    username = user.getDisplayName();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         //Sending SMS
         SmsManager smsManager = SmsManager.getDefault();
         try {
             smsManager.sendTextMessage(phonenum, null,
-                    "Dear "+username+",\n"+"Your event is due in 1 hour. Here is the custom message you have given:\n"+docList, null, null);
+                    "Dear " + username + ",\n" + "Your event is due in 1 hour. Here is the custom message you have given:\n" + docList, null, null);
         } catch (Exception e) {
             Toast.makeText(context, "SMS failed!", Toast.LENGTH_LONG).show();
         }

@@ -26,14 +26,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Appliances extends AppCompatActivity {
+public class HomeMaintanence extends AppCompatActivity {
     private ExpandableListView expandableListView;
     private ExpandableListAdapter adapter;
     private List<String> arraylist;
     private HashMap<String, AppliancesData> hashMap;
     private int lastExpandedPosition = -1;
-    private FloatingActionButton addnewappliance;
-    private DatabaseReference rootref, appliancesref;
+    private FloatingActionButton addNewMaintanence;
+    private DatabaseReference rootref, maintanenceRef;
     private FirebaseAuth auth;
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle toggle;
@@ -41,16 +41,16 @@ public class Appliances extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_appliances);
-        addnewappliance = (FloatingActionButton) findViewById(R.id.newappliancebutton);
-        expandableListView = findViewById(R.id.applianceslistexpandable);
+        setContentView(R.layout.activity_home_maintanence);
+        addNewMaintanence = (FloatingActionButton) findViewById(R.id.newmaintainancebutton);
+        expandableListView = findViewById(R.id.maintainancelistexpandable);
 
         init();
 
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
-                if(lastExpandedPosition != -1 && groupPosition != lastExpandedPosition){
+                if (lastExpandedPosition != -1 && groupPosition != lastExpandedPosition) {
                     expandableListView.collapseGroup(lastExpandedPosition);
                 }
                 lastExpandedPosition = groupPosition;
@@ -58,10 +58,10 @@ public class Appliances extends AppCompatActivity {
             }
         });
 
-        addnewappliance.setOnClickListener(new View.OnClickListener() {
+        addNewMaintanence.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), newApplicanceActivity.class);
+                Intent i = new Intent(getApplicationContext(), NewMaintainanceActivity.class);
                 startActivity(i);
                 finish();
             }
@@ -69,7 +69,7 @@ public class Appliances extends AppCompatActivity {
 
         //Navigation Bar code start
         NavigationView navigationView = findViewById(R.id.lisofitems);
-        navDrawer = (DrawerLayout) findViewById(R.id.ApplianceDrawer);
+        navDrawer = (DrawerLayout) findViewById(R.id.MaintanenceDrawer);
         toggle = new ActionBarDrawerToggle(this, navDrawer, R.string.open, R.string.close);
         navDrawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -119,26 +119,26 @@ public class Appliances extends AppCompatActivity {
         hashMap = new HashMap<>();
         auth = FirebaseAuth.getInstance();
         rootref = FirebaseDatabase.getInstance().getReference();
-        appliancesref = rootref.child("Appliances").child(auth.getCurrentUser().getUid());
+        maintanenceRef = rootref.child("Maintainance").child(auth.getCurrentUser().getUid());
 
-        appliancesref.addValueEventListener(new ValueEventListener() {
+        maintanenceRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot snap: snapshot.getChildren()){
-                        HashMap<String, String> temp = new HashMap<>();
-                        arraylist.add(snap.getKey());
-                        System.out.println(((HashMap<String, String>) snap.getValue()).get("title"));
-                        temp = (HashMap<String, String>) snap.getValue();
-                        AppliancesData appliancesData = new AppliancesData(
-                                ((HashMap<String, String>) snap.getValue()).get("title"),
-                                ((HashMap<String, String>) snap.getValue()).get("status"),
-                                ((HashMap<String, String>) snap.getValue()).get("category"),
-                                ((HashMap<String, String>) snap.getValue()).get("imageUri")
-                        );
-                        hashMap.put(((HashMap<String, String>) snap.getValue()).get("title"), appliancesData);
-                        //System.out.println(hashMap.get("pic"));
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    HashMap<String, String> temp = new HashMap<>();
+                    arraylist.add(snap.getKey());
+                    System.out.println(((HashMap<String, String>) snap.getValue()).get("title"));
+                    temp = (HashMap<String, String>) snap.getValue();
+                    AppliancesData appliancesData = new AppliancesData(
+                            ((HashMap<String, String>) snap.getValue()).get("title"),
+                            ((HashMap<String, String>) snap.getValue()).get("status"),
+                            ((HashMap<String, String>) snap.getValue()).get("category"),
+                            ((HashMap<String, String>) snap.getValue()).get("imageUri")
+                    );
+                    hashMap.put(((HashMap<String, String>) snap.getValue()).get("title"), appliancesData);
+                    //System.out.println(hashMap.get("pic"));
                 }
-                adapter = new CustomAdapterForExpandable(Appliances.this, arraylist, hashMap);
+                adapter = new CustomAdapterForExpandable(HomeMaintanence.this, arraylist, hashMap);
                 expandableListView.setAdapter(adapter);
             }
 

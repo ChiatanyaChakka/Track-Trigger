@@ -80,11 +80,11 @@
         android:text="@string/SinupButton"
         android:textColor="#FFFFFF"
         app:backgroundTint="#000000"
-        app:iconTint="#262626"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+<!--        app:iconTint="#262626"-->
 
     <TextView
         android:id="@+id/textView3"
@@ -143,23 +143,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="" />
-
-    <Button
-        android:id="@+id/testButton"
-        android:layout_width="76dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="301dp"
-        android:layout_marginLeft="301dp"
-        android:layout_marginTop="402dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="240dp"
-        android:text="test"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <GridLayout
         android:layout_width="240dp"

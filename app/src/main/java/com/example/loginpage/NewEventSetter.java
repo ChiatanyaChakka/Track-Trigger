@@ -1,22 +1,13 @@
 package com.example.loginpage;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.DialogFragment;
-
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -24,6 +15,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -127,7 +123,7 @@ public class NewEventSetter extends AppCompatActivity {
                 i.putExtra("description", description);
                 PendingIntent broadcast = PendingIntent.getBroadcast(getApplicationContext(), 55, i, PendingIntent.FLAG_UPDATE_CURRENT);
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), broadcast);
-                Toast.makeText(getApplicationContext(), "Alarm set successfully, To make sure, press 2 times", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Alarm set successfully!", Toast.LENGTH_LONG).show();
 
                 String time = (c.get(Calendar.HOUR_OF_DAY) + 1) +":"+ c.get(Calendar.MINUTE);
                 String date = c.get(Calendar.DAY_OF_MONTH)+"-"+c.get(Calendar.MONTH)+"-"+c.get(Calendar.YEAR);

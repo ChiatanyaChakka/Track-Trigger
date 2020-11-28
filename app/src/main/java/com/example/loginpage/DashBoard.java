@@ -167,11 +167,11 @@ public class DashBoard extends AppCompatActivity {
             }
         });
 
-        HomeMaintButton = findViewById(R.id.ApplianceButton);
+        HomeMaintButton = findViewById(R.id.HomeMaintenance);
         HomeMaintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(DashBoard.this, Appliances.class);
+                Intent i = new Intent(DashBoard.this, HomeMaintanence.class);
                 startActivity(i);
                 finish();
             }
