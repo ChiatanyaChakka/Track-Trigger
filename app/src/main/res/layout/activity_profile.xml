@@ -16,13 +16,14 @@
             android:id="@+id/textView12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="49dp"
-            android:layout_marginLeft="49dp"
+            android:layout_marginStart="17dp"
+            android:layout_marginLeft="17dp"
+            android:layout_marginBottom="235dp"
             android:fontFamily="@font/advent_pro"
-            android:text="Profession"
+            android:text="Profession: "
             android:textSize="25dp"
             android:textStyle="bold"
-            app:layout_constraintBaseline_toBaselineOf="@+id/ProfileProfession"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
@@ -31,106 +32,99 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="49dp"
             android:layout_marginLeft="49dp"
+            android:layout_marginBottom="35dp"
             android:fontFamily="@font/advent_pro"
-            android:text="Phone Number"
+            android:text="Phone: \nNumber"
             android:textSize="25dp"
             android:textStyle="bold"
-            app:layout_constraintBaseline_toBaselineOf="@+id/ProfileNumber"
+            app:layout_constraintBottom_toTopOf="@+id/textView12"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/textView14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="49dp"
-            android:layout_marginLeft="49dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginBottom="42dp"
+            android:layout_marginBottom="26dp"
             android:fontFamily="@font/advent_pro"
-            android:text="Email"
+            android:text="Email: "
             android:textSize="25dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/textView13"
-            app:layout_constraintEnd_toEndOf="@+id/textView12"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="@+id/textView13" />
 
         <TextView
             android:id="@+id/textView15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="49dp"
-            android:layout_marginLeft="49dp"
-            android:layout_marginBottom="52dp"
+            android:layout_marginStart="62dp"
+            android:layout_marginLeft="62dp"
             android:fontFamily="@font/advent_pro"
-            android:text="Name"
+            android:text="Name: "
             android:textSize="25dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/textView14"
+            app:layout_constraintBaseline_toBaselineOf="@+id/ProfileName"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/ProfileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="52dp"
+            android:layout_marginStart="11dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginBottom="47dp"
             android:fontFamily="@font/advent_pro"
-            android:textSize="25dp"
+            android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/ProfileEmail"
-            app:layout_constraintStart_toStartOf="@+id/ProfileEmail" />
+            app:layout_constraintStart_toEndOf="@+id/textView15" />
 
         <TextView
             android:id="@+id/ProfileEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="264dp"
+            android:layout_marginStart="11dp"
+            android:layout_marginLeft="11dp"
             android:fontFamily="@font/advent_pro"
-            android:textSize="25dp"
+            android:textSize="20dp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/ProfileNumber"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView14"
+            app:layout_constraintStart_toEndOf="@+id/textView14" />
 
         <TextView
             android:id="@+id/ProfileNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="29dp"
-            android:layout_marginLeft="29dp"
-            android:layout_marginTop="42dp"
+            android:layout_marginStart="11dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="15dp"
             android:fontFamily="@font/advent_pro"
-            android:textSize="25dp"
+            android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/textView13"
-            app:layout_constraintTop_toBottomOf="@+id/ProfileEmail" />
+            app:layout_constraintTop_toTopOf="@+id/textView13" />
 
         <TextView
             android:id="@+id/ProfileProfession"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
+            android:layout_marginStart="11dp"
+            android:layout_marginLeft="11dp"
             android:fontFamily="@font/advent_pro"
-            android:textSize="25dp"
+            android:textSize="20dp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/ProfileNumber"
-            app:layout_constraintTop_toBottomOf="@+id/ProfileNumber" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView12"
+            app:layout_constraintStart_toEndOf="@+id/textView12" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="112dp"
-            android:layout_marginLeft="112dp"
-            android:layout_marginTop="563dp"
-            android:layout_marginEnd="112dp"
-            android:layout_marginRight="112dp"
-            android:layout_marginBottom="96dp"
+            android:layout_marginBottom="100dp"
             android:text="@string/copyright"
             android:textColor="#494646"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

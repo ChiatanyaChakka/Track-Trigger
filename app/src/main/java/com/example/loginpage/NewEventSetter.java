@@ -129,7 +129,7 @@ public class NewEventSetter extends AppCompatActivity {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), broadcast);
                 Toast.makeText(getApplicationContext(), "Alarm set successfully, To make sure, press 2 times", Toast.LENGTH_LONG).show();
 
-                String time = c.get(Calendar.HOUR_OF_DAY) +":"+ c.get(Calendar.MINUTE);
+                String time = (c.get(Calendar.HOUR_OF_DAY) + 1) +":"+ c.get(Calendar.MINUTE);
                 String date = c.get(Calendar.DAY_OF_MONTH)+"-"+c.get(Calendar.MONTH)+"-"+c.get(Calendar.YEAR);
                 eventdetails.put("Time", time);
                 eventdetails.put("Date", date);

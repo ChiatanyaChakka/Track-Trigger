@@ -27,6 +27,11 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +41,6 @@ public class ProfessionActivity extends AppCompatActivity {
 
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle toggle;
-    private FirebaseAuth auth;
     private EditText searchbar;
     SimpleCustomAdapter adapter;
     ArrayList<String> profcattitles;
@@ -44,24 +48,49 @@ public class ProfessionActivity extends AppCompatActivity {
     private FloatingActionButton addnewprofitem;
     HashMap<String, Boolean> stringBooleanHashMap;
 
+    private int professionalButtonNumber;
+    private FirebaseAuth auth;
+    private DatabaseReference rootRef, categoryRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profession);
 
         addnewprofitem = (FloatingActionButton) findViewById(R.id.addnewprofcat) ;
+        searchbar = findViewById(R.id.searchbar);
+        profcatlist = findViewById(R.id.profcatlistview);
+
+        Bundle intentBundle = getIntent().getExtras();
+        professionalButtonNumber = intentBundle.getInt("buttonNumber");
 
         auth = FirebaseAuth.getInstance();
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        categoryRef = rootRef.child("DashBoard").child(auth.getCurrentUser().getUid()+" "+"professional").child(String.valueOf(professionalButtonNumber));
 
         //Temp
         profcattitles = new ArrayList<>();
         stringBooleanHashMap = new HashMap<>();
-        profcattitles.add("Homework one");
-        stringBooleanHashMap.put("Homework one", true);
-        profcattitles.add("HomeWork two");
-        stringBooleanHashMap.put("HomeWork two", false);
-
         //Temp
+
+        categoryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                stringBooleanHashMap.clear();
+                profcattitles.clear();
+                for (DataSnapshot snap: snapshot.getChildren()) {
+                        profcattitles.add(snap.getKey());
+                        stringBooleanHashMap.put(snap.getKey(), snap.getValue(boolean.class));
+                }
+                adapter = new SimpleCustomAdapter(ProfessionActivity.this, R.layout.row_for_profcategory, profcattitles);
+                profcatlist.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         addnewprofitem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +121,12 @@ public class ProfessionActivity extends AppCompatActivity {
                         }
                         else{
                             profcattitles.add(input.getText().toString());
-                            alertDialog.dismiss();
+                            stringBooleanHashMap.put(input.getText().toString(),false);
                             adapter.notifyDataSetChanged();
+                            HashMap<String,Object> map = new HashMap<>();
+                            map.put(String.valueOf(professionalButtonNumber),stringBooleanHashMap);
+                            categoryRef.getParent().updateChildren(map);
+                            alertDialog.dismiss();
                         }
                     }
                 });
@@ -140,14 +173,9 @@ public class ProfessionActivity extends AppCompatActivity {
 
         //ListViewCode start
 
-        profcatlist = findViewById(R.id.profcatlistview);
-        adapter = new SimpleCustomAdapter(this, R.layout.row_for_profcategory, profcattitles);
-        profcatlist.setAdapter(adapter);
-
         //ListViewCode end
 
         //Seach bar start
-        searchbar = findViewById(R.id.searchbar);
         searchbar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -188,6 +216,16 @@ public class ProfessionActivity extends AppCompatActivity {
                 ViewHolderprof viewHolderprof = new ViewHolderprof();
                 viewHolderprof.itemnameprof = (TextView) convertView.findViewById(R.id.titleprofcat);
                 viewHolderprof.checkBox = (CheckBox) convertView.findViewById(R.id.checkboxprofcat);
+                viewHolderprof.checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        stringBooleanHashMap.put(getItem(position),viewHolderprof.checkBox.isChecked());
+                        HashMap<String,Object> map = new HashMap<>();
+                        map.put(String.valueOf(professionalButtonNumber),stringBooleanHashMap);
+                        categoryRef.getParent().updateChildren(map);
+                        notifyDataSetChanged();
+                    }
+                });
                 convertView.setTag(viewHolderprof);
             }
             mainholderprof = (ViewHolderprof) convertView.getTag();

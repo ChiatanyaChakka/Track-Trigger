@@ -78,7 +78,6 @@ public class Groceries extends AppCompatActivity {
         currentUserGroceriesRef = groceriesRef.child(user.getUid());
 
         groceries = findViewById(R.id.Groceries);
-        adapter = new SimpleViewAdapter(this, R.layout.simple_row, items);
 
         //Navigation Bar code start
         NavigationView navigationView = findViewById(R.id.navigationview);
@@ -150,7 +149,8 @@ public class Groceries extends AppCompatActivity {
                     databaseImage.put(groceriesMap.getKey(), Integer.parseInt(groceriesMap.getValue().toString()));
                     items.add(groceriesMap.getKey());
                 }
-                adapter.notifyDataSetChanged();
+                adapter = new SimpleViewAdapter(Groceries.this, R.layout.simple_row, items);
+                groceries.setAdapter(adapter);
             }
 
             @Override
@@ -160,16 +160,6 @@ public class Groceries extends AppCompatActivity {
         });
 
 
-        groceries.setAdapter(adapter);
-
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HashMap<String,Object > map = new HashMap<>();
-                map.put(user.getUid(),databaseImage);   //need to give second argument as a map. key itemName and value itemCount.
-                groceriesRef.updateChildren(map);
-            }
-        });
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
