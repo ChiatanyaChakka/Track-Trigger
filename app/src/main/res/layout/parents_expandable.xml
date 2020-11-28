@@ -3,7 +3,9 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#ffd647"
     android:padding="15dp">
+
     <ImageView
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -19,12 +21,16 @@
             android:layout_width="wrap_content"
             android:id="@+id/nameofitemparent"
             android:layout_margin="5dp"
+            android:fontFamily="@font/advent_pro"
+            android:textColor="@color/black"
             android:text="Name of the Item"
+            android:textStyle="bold"
             android:textSize="20dp"
             android:layout_height="wrap_content"/>
         <TextView
             android:layout_width="wrap_content"
             android:text="Category"
+            android:fontFamily="@font/advent_pro"
             android:id="@+id/categoryofitemparent"
             android:layout_margin="5dp"
             android:textSize="17dp"

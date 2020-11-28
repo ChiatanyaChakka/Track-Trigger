@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#ffd647"
     android:layout_height="match_parent"
     tools:context=".Appliances">
 
@@ -19,10 +20,12 @@
         android:id="@+id/applianceslistexpandable"
         android:layout_width="0dp"
         android:layout_height="565dp"
+        android:layout_marginTop="56dp"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="0.5dp"
         android:groupIndicator="@null"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/editText">
 

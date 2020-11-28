@@ -47,44 +47,9 @@ public class Appliances extends AppCompatActivity {
         addnewappliance = (FloatingActionButton) findViewById(R.id.newappliancebutton);
         expandableListView = findViewById(R.id.applianceslistexpandable);
 
-        arraylist = new ArrayList<>();
-        hashMap = new HashMap<>();
-        auth = FirebaseAuth.getInstance();
-        rootref = FirebaseDatabase.getInstance().getReference();
-        appliancesref = rootref.child("Appliances").child(auth.getCurrentUser().getUid());
-        adapter = new CustomAdapterForExpandable(this, arraylist, hashMap);
+        init();
 
-        appliancesref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot snap: snapshot.getChildren()){
-                    try {
-                        HashMap<String, String> temp = new HashMap<>();
-                        arraylist.add(snap.getKey());
-                        System.out.println(((HashMap<String, String>) snap.getValue()).get("title"));
-                        temp = (HashMap<String, String>) snap.getValue();
-                        AppliancesData appliancesData = new AppliancesData(
-                                ((HashMap<String, String>) snap.getValue()).get("title"),
-                                ((HashMap<String, String>) snap.getValue()).get("status"),
-                                ((HashMap<String, String>) snap.getValue()).get("category"),
-                                ((HashMap<String, String>) snap.getValue()).get("imageUri")
-                        );
-                        hashMap.put(((HashMap<String, String>) snap.getValue()).get("title"), appliancesData);
-                        System.out.println(hashMap.get("pic"));
-                        adapter.notifyAll();
-                    }catch (Exception e){
-                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        expandableListView.setAdapter(adapter);
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
@@ -146,4 +111,40 @@ public class Appliances extends AppCompatActivity {
 
 
     }
+
+    private void init() {
+        arraylist = new ArrayList<>();
+        hashMap = new HashMap<>();
+        auth = FirebaseAuth.getInstance();
+        rootref = FirebaseDatabase.getInstance().getReference();
+        appliancesref = rootref.child("Appliances").child(auth.getCurrentUser().getUid());
+
+        appliancesref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap: snapshot.getChildren()){
+                        HashMap<String, String> temp = new HashMap<>();
+                        arraylist.add(snap.getKey());
+                        System.out.println(((HashMap<String, String>) snap.getValue()).get("title"));
+                        temp = (HashMap<String, String>) snap.getValue();
+                        AppliancesData appliancesData = new AppliancesData(
+                                ((HashMap<String, String>) snap.getValue()).get("title"),
+                                ((HashMap<String, String>) snap.getValue()).get("status"),
+                                ((HashMap<String, String>) snap.getValue()).get("category"),
+                                ((HashMap<String, String>) snap.getValue()).get("imageUri")
+                        );
+                        hashMap.put(((HashMap<String, String>) snap.getValue()).get("title"), appliancesData);
+                        //System.out.println(hashMap.get("pic"));
+                }
+                adapter = new CustomAdapterForExpandable(Appliances.this, arraylist, hashMap);
+                expandableListView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }

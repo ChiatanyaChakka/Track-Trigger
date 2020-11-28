@@ -100,17 +100,31 @@ public class newApplicanceActivity extends AppCompatActivity {
 
     private void uploadFile() {
         if (mImageUri != null) {
-            StorageReference fileReference = mStorageRef.child(nameofitem.getText() + "." + getFileExtension(mImageUri));
+            StorageReference fileReference = mStorageRef.child(nameofitem.getText().toString() + "." + getFileExtension(mImageUri));
             mUploadTask = fileReference.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Upload up = new Upload(nameofitem.getText().toString().trim(),taskSnapshot.getMetadata().getReference().getDownloadUrl().toString(),
+                    Upload up = new Upload(nameofitem.getText().toString().trim(), taskSnapshot.getMetadata().getReference().getDownloadUrl().toString(),
                             statusofappliance.getText().toString(), nameofcategory.getText().toString());
 
-                    mDatabaseRef.child(nameofitem.getText().toString()).child("imageUri").setValue(mImageUri.toString());
-                    mDatabaseRef.child(nameofitem.getText().toString()).child("category").setValue(nameofcategory.getText().toString());
-                    mDatabaseRef.child(nameofitem.getText().toString()).child("title").setValue(nameofitem.getText().toString());
-                    mDatabaseRef.child(nameofitem.getText().toString()).child("status").setValue(statusofappliance.getText().toString());
+                    StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("uploads/"+nameofitem.getText().toString() + "." + getFileExtension(mImageUri));
+                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            System.out.println(uri+" thi is random");
+                            mDatabaseRef.child(nameofitem.getText().toString()).child("imageUri").setValue(uri.toString());
+                            mDatabaseRef.child(nameofitem.getText().toString()).child("category").setValue(nameofcategory.getText().toString());
+                            mDatabaseRef.child(nameofitem.getText().toString()).child("title").setValue(nameofitem.getText().toString());
+                            mDatabaseRef.child(nameofitem.getText().toString()).child("status").setValue(statusofappliance.getText().toString());
+                        }
+
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
                     Toast.makeText(newApplicanceActivity.this, "Upload Successful", Toast.LENGTH_LONG).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
