@@ -27,6 +27,11 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,13 +41,16 @@ public class CustomActivity extends AppCompatActivity {
 
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle toggle;
-    private FirebaseAuth auth;
     private EditText searchbar;
     SimpleCustomAdaptercust adapter;
     ArrayList<String> custcattitles;
     private FloatingActionButton addnewcustitem;
     private ListView custcatlist;
     HashMap<String, Boolean> stringBooleanHashMapcust;
+
+    private int customButtonNumber;
+    private FirebaseAuth auth;
+    private DatabaseReference rootRef, categoryRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +59,38 @@ public class CustomActivity extends AppCompatActivity {
 
         addnewcustitem = (FloatingActionButton)findViewById(R.id.addNewCustomItem);
 
+        Bundle intentBundle = getIntent().getExtras();
+        customButtonNumber = intentBundle.getInt("buttonNumber");
+
         auth = FirebaseAuth.getInstance();
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        categoryRef = rootRef.child("DashBoard").child(auth.getCurrentUser().getUid()+" "+"custom").child(String.valueOf(customButtonNumber));
+        searchbar = findViewById(R.id.searchbarcust);
 
         //Temp
         custcattitles = new ArrayList<>();
         stringBooleanHashMapcust = new HashMap<>();
-        custcattitles.add("project one");
-        stringBooleanHashMapcust.put("project one", true);
-        custcattitles.add("project two");
-        stringBooleanHashMapcust.put("project two", false);
         //Temp
+        custcatlist = findViewById(R.id.custcatlistview);
+
+        categoryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                stringBooleanHashMapcust.clear();
+                custcattitles.clear();
+                for (DataSnapshot snap: snapshot.getChildren()) {
+                        custcattitles.add(snap.getKey());
+                        stringBooleanHashMapcust.put(snap.getKey(), snap.getValue(boolean.class));
+                }
+                adapter = new SimpleCustomAdaptercust(CustomActivity.this, R.layout.row_for_profcategory, custcattitles);
+                custcatlist.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         addnewcustitem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,8 +121,12 @@ public class CustomActivity extends AppCompatActivity {
                         }
                         else{
                             custcattitles.add(input.getText().toString());
-                            alertDialog.dismiss();
+                            stringBooleanHashMapcust.put(input.getText().toString(),false);
                             adapter.notifyDataSetChanged();
+                            HashMap<String,Object> map = new HashMap<>();
+                            map.put(String.valueOf(customButtonNumber),stringBooleanHashMapcust);
+                            categoryRef.getParent().updateChildren(map);
+                            alertDialog.dismiss();
                         }
                     }
                 });
@@ -139,14 +173,9 @@ public class CustomActivity extends AppCompatActivity {
 
         //ListViewCode start
 
-        custcatlist = findViewById(R.id.custcatlistview);
-        adapter = new SimpleCustomAdaptercust(this, R.layout.row_for_profcategory, custcattitles);
-        custcatlist.setAdapter(adapter);
-
         //ListViewCode end
 
         //Seach bar start
-        searchbar = findViewById(R.id.searchbarcust);
         searchbar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -187,6 +216,16 @@ public class CustomActivity extends AppCompatActivity {
                 ViewHoldercust viewHolderprof = new ViewHoldercust();
                 viewHolderprof.itemnameprof = (TextView) convertView.findViewById(R.id.titleprofcat);
                 viewHolderprof.checkBox = (CheckBox) convertView.findViewById(R.id.checkboxprofcat);
+                viewHolderprof.checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        stringBooleanHashMapcust.put(getItem(position),viewHolderprof.checkBox.isChecked());
+                        HashMap<String,Object> map = new HashMap<>();
+                        map.put(String.valueOf(customButtonNumber),stringBooleanHashMapcust);
+                        categoryRef.getParent().updateChildren(map);
+                        notifyDataSetChanged();
+                    }
+                });
                 convertView.setTag(viewHolderprof);
             }
             mainholderprof = (ViewHoldercust) convertView.getTag();

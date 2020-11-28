@@ -61,13 +61,9 @@ public class DashBoard extends AppCompatActivity {
         customSectionRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int n = (int) snapshot.getChildrenCount();
+                int i=0;
                 for (DataSnapshot snap : snapshot.getChildren()) {
-                    try {
-                        customButton[3 - (n--)].setText(Objects.requireNonNull(snap.getValue()).toString());
-                    } catch (NullPointerException e) {
-                        ;
-                    }
+                    customButton[i++].setText(Objects.requireNonNull(snap.getValue(String.class)));
                 }
             }
 
@@ -218,13 +214,13 @@ public class DashBoard extends AppCompatActivity {
 
             switch (id) {
                 case R.id.Professional1:
-                    intent.putExtra("buttonNumber", "firstButt");
+                    intent.putExtra("buttonNumber", 1);
                     break;
                 case R.id.Professional2:
-                    intent.putExtra("buttonNumber", "secondButt");
+                    intent.putExtra("buttonNumber", 2);
                     break;
                 case R.id.Professional3:
-                    intent.putExtra("buttonNumber", "thirdButt");
+                    intent.putExtra("buttonNumber", 3);
                     break;
             }
 
@@ -241,15 +237,15 @@ public class DashBoard extends AppCompatActivity {
 
             switch (id) {
                 case R.id.Custom1:
-                    intent.putExtra("buttonNumber", "firstButt");
+                    intent.putExtra("buttonNumber", 1);
                     customButtonNumber = 1;
                     break;
                 case R.id.Custom2:
-                    intent.putExtra("buttonNumber", "secondButt");
+                    intent.putExtra("buttonNumber", 2);
                     customButtonNumber = 2;
                     break;
                 case R.id.Custom3:
-                    intent.putExtra("buttonNumber", "thirdButt");
+                    intent.putExtra("buttonNumber", 3);
                     customButtonNumber = 3;
                     break;
             }
