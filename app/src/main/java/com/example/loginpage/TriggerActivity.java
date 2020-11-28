@@ -6,16 +6,21 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -164,10 +170,43 @@ public class TriggerActivity extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId() == R.id.repeat){
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, 3);
+            calendar.set(Calendar.MINUTE, 2);
+
+//            TimePickerDialog timePickerDialog = new TimePickerDialog(TriggerActivity.this, new TimePickerDialog.OnTimeSetListener() {
+//                @Override
+//                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+//
+//                    calendar.set(Calendar.MINUTE, minute);
+//                    calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+//                }
+//            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+//
+//            timePickerDialog.show();
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            Intent intent = new Intent(getApplicationContext(), Notifiction_receiver.class);
+            intent.setAction("MY_NOTIFICATION_MESSAGE");
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 1500, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+            Toast.makeText(getApplicationContext(), "Notification setup successfully!", Toast.LENGTH_LONG).show();
+        }
+
         if(toggle.onOptionsItemSelected(item))
             return true;
         return super.onOptionsItemSelected(item);
+
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.overflow_for_trigger, menu);
+        return true;
+    }
+
     class ViewHolderTrig{
         TextView date;
         TextView time;
