@@ -84,6 +84,10 @@ public class TriggerActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                     startActivity(intent);
                     finish();
+                }else if (id == R.id.profile){
+                    Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
+                    startActivity(profile);
+                    finish();
                 }
                 return true;
             }

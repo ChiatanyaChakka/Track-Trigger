@@ -35,6 +35,7 @@ public class DashBoard extends AppCompatActivity {
     private Button GroceryButton, ApplianceButton, HomeMaintButton;
     private Button[] customButton;
     private Button[] professionalButton;
+    private int customButtonNumber;
 
     private FirebaseAuth auth;
     private DatabaseReference rootRef, userRef, customSectionRef, profSectionRef;
@@ -141,6 +142,10 @@ public class DashBoard extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     finish();
+                }else if (id == R.id.profile){
+                    Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
+                    startActivity(profile);
+                    finish();
                 }
                 return true;
             }
@@ -183,6 +188,10 @@ public class DashBoard extends AppCompatActivity {
         customButton[0] = findViewById(R.id.Custom1);
         customButton[1] = findViewById(R.id.Custom2);
         customButton[2] = findViewById(R.id.Custom3);
+
+        for (Button b : customButton) {
+            b.setOnClickListener(listenerCustom);
+        }
 
         professionalButton = new Button[3];
         professionalButton[0] = findViewById(R.id.Professional1);
@@ -233,12 +242,15 @@ public class DashBoard extends AppCompatActivity {
             switch (id) {
                 case R.id.Custom1:
                     intent.putExtra("buttonNumber", "firstButt");
+                    customButtonNumber = 1;
                     break;
                 case R.id.Custom2:
                     intent.putExtra("buttonNumber", "secondButt");
+                    customButtonNumber = 2;
                     break;
                 case R.id.Custom3:
                     intent.putExtra("buttonNumber", "thirdButt");
+                    customButtonNumber = 3;
                     break;
             }
 
@@ -268,10 +280,10 @@ public class DashBoard extends AppCompatActivity {
                     public void onClick(View v) {
                         String s = input.getText().toString();
                         System.out.println(s);
+                        customSectionRef.child(String.valueOf(customButtonNumber)).setValue(s);
                         if (s.equals("") || s == null) {
                             Toast.makeText(getApplicationContext(), "Please enter some data", Toast.LENGTH_SHORT).show();
                         } else {
-                            ((Button) v).setText(s);
                             dialog.dismiss();
                         }
                     }

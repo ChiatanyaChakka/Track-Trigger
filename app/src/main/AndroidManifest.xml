@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
-        <activity android:name=".newApplicanceActivity"></activity>
+        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".newApplicanceActivity" />
         <activity android:name=".Appliances" />
         <activity android:name=".TriggerActivity" />
         <activity android:name=".NewEventSetter" />

@@ -41,7 +41,7 @@ public class ProfessionActivity extends AppCompatActivity {
     SimpleCustomAdapter adapter;
     ArrayList<String> profcattitles;
     private ListView profcatlist;
-    FloatingActionButton addnewprofitem;
+    private FloatingActionButton addnewprofitem;
     HashMap<String, Boolean> stringBooleanHashMap;
 
     @Override
@@ -62,7 +62,6 @@ public class ProfessionActivity extends AppCompatActivity {
         stringBooleanHashMap.put("HomeWork two", false);
 
         //Temp
-
 
         addnewprofitem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +127,10 @@ public class ProfessionActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Signing out...", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                     startActivity(intent);
+                    finish();
+                }else if (id == R.id.profile){
+                    Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
+                    startActivity(profile);
                     finish();
                 }
                 return true;

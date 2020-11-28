@@ -40,14 +40,18 @@ public class CustomActivity extends AppCompatActivity {
     private EditText searchbar;
     SimpleCustomAdaptercust adapter;
     ArrayList<String> custcattitles;
-    FloatingActionButton addnewcustitem;
+    private FloatingActionButton addnewcustitem;
     private ListView custcatlist;
     HashMap<String, Boolean> stringBooleanHashMapcust;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profession);
+        setContentView(R.layout.activity_custom);
+
+        addnewcustitem = (FloatingActionButton)findViewById(R.id.addNewCustomItem);
+
+        auth = FirebaseAuth.getInstance();
 
         //Temp
         custcattitles = new ArrayList<>();
@@ -58,8 +62,6 @@ public class CustomActivity extends AppCompatActivity {
         stringBooleanHashMapcust.put("project two", false);
         //Temp
 
-        auth = FirebaseAuth.getInstance();
-        addnewcustitem = (FloatingActionButton) findViewById(R.id.addnewcustcat);
         addnewcustitem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +99,6 @@ public class CustomActivity extends AppCompatActivity {
             }
         });
 
-
         //Navigation code start
         NavigationView navigationView;
         navigationView = findViewById(R.id.lisofitems);
@@ -125,6 +126,10 @@ public class CustomActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Signing out...", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                     startActivity(intent);
+                    finish();
+                }else if (id == R.id.profile){
+                    Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
+                    startActivity(profile);
                     finish();
                 }
                 return true;

@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinner;
 
     private FirebaseAuth auth;
-    private DatabaseReference userDetailRef;
+    private DatabaseReference userDetailRef, rootRef;
     private HashMap<String,Object> map;
     private CallbackManager callbackManager;
     private GoogleSignInClient googleSignInClient;
@@ -120,7 +120,8 @@ public class MainActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, gso);
         callbackManager = CallbackManager.Factory.create();
         auth = FirebaseAuth.getInstance();
-        userDetailRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        userDetailRef = rootRef.child("Users");
         map = new HashMap<>();
 
         test = findViewById(R.id.testButton);
@@ -229,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }else {
+                            createDataBase();
                             dialog.show();
                         }
                     }
@@ -238,7 +240,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
-
             }
         }).addOnFailureListener(this, new OnFailureListener() {
             @Override
@@ -300,6 +301,13 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void createDataBase() {
+        DatabaseReference dashBoard = rootRef.child("DashBoard").child(auth.getCurrentUser().getUid());
+        for (int i=1;i<=3;i++){
+            dashBoard.child(String.valueOf(i)).setValue("Add\nCustom\nButton");
+        }
     }
 
     @Override

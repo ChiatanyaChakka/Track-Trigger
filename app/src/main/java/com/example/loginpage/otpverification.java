@@ -193,17 +193,16 @@ public class otpverification extends AppCompatActivity {
                     map.put("phone", phone);
                     map.put("profession", profession);
 
-                    auth.signInWithEmailAndPassword(email,password);
+                    auth.signInWithEmailAndPassword(email, password);
                     rootRef.child("Users").child(auth.getCurrentUser().getUid()).setValue(map);
 
                     FirebaseUser user = auth.getCurrentUser();
-                    if(!user.isEmailVerified()){
+                    if (!user.isEmailVerified()) {
                         user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(otpverification.this,"Please check your mail for a verification Email.", Toast.LENGTH_LONG).show();
-                    //DBref.child("Users").child(username).setValue(map);
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
+                                Toast.makeText(otpverification.this, "Please check your mail for a verification Email.", Toast.LENGTH_LONG).show();
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
 
                                 Intent i = new Intent(otpverification.this, DashBoard.class);
                                 startActivity(i);
@@ -211,6 +210,7 @@ public class otpverification extends AppCompatActivity {
                             }
                         });
                     }
+                    createDataBase();
 
                     Intent i = new Intent(otpverification.this, DashBoard.class);
                     //Intent i = new Intent(otpverification.this, MainActivity.class);
@@ -219,15 +219,22 @@ public class otpverification extends AppCompatActivity {
                 } else {
                     Exception e = task.getException();
                     if (e instanceof FirebaseAuthUserCollisionException) {
-                        Toast.makeText(otpverification.this, e.getMessage()+" Please Sign-in with that account.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(otpverification.this, e.getMessage() + " Please Sign-in with that account.", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(otpverification.this, MainActivity.class);
                         startActivity(intent);
-                    }else {
-                        Toast.makeText(otpverification.this,"Registeration Failed!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(otpverification.this, "Registeration Failed!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
+    }
+
+    private void createDataBase() {
+        DatabaseReference dashBoard = rootRef.child("DashBoard").child(auth.getCurrentUser().getUid());
+        for (int i = 1; i <= 3; i++) {
+            dashBoard.child(String.valueOf(i)).setValue("Add\nCustom\nButton");
+        }
     }
 
     private int genOTP() {
@@ -255,11 +262,10 @@ public class otpverification extends AppCompatActivity {
 
                 // Add subject, Body, your mail Id, and receiver mail Id.
                 sender.sendMail("OTP--Track and Trigger app",
-                        "Never share your One-Time-Password with anyone\nYour OTP for verification of the mail is" +Integer.toString(OTPmail),
-                        "trackandtriggerr@gmail.com",mailid);
+                        "Never share your One-Time-Password with anyone\nYour OTP for verification of the mail is" + Integer.toString(OTPmail),
+                        "trackandtriggerr@gmail.com", mailid);
                 Log.d("send", "done");
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Log.d("exceptionsending", ex.toString());
             }
             return null;
