@@ -2,7 +2,9 @@ package com.example.loginpage;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.media.Image;
@@ -19,6 +21,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -39,11 +43,10 @@ public class newApplicanceActivity extends AppCompatActivity {
     private Button upload;
     private Button create;
     private StorageReference mStorageRef;
-    private DatabaseReference mDatabaseRef;
+    private DatabaseReference mDatabaseRef, rootref, applianceref;
     private Uri mImageUri;
-    String nameappli;
-    String cateappli;
-    String statappli;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
     private StorageTask mUploadTask;
    // private Uri uri;
 
@@ -51,15 +54,23 @@ public class newApplicanceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_applicance);
-
+        ActivityCompat.requestPermissions(newApplicanceActivity.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                1);
+        auth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         applianceimage = (ImageView) findViewById(R.id.applianceimage);
         nameofitem = (EditText) findViewById(R.id.nameofnewappliance);
         nameofcategory = (EditText) findViewById(R.id.categoryofappliance);
+        statusofappliance = (EditText) findViewById(R.id.statusofappliance);
         choose = (Button) findViewById(R.id.choosefile);
         upload = (Button) findViewById(R.id.upload);
-        create = (Button) findViewById(R.id.create);
+        create = (Button) findViewById(R.id.CreateAppliance);
         mStorageRef= FirebaseStorage.getInstance().getReference("uploads");
-        mDatabaseRef= FirebaseDatabase.getInstance().getReference("Uploads");
+        rootref = FirebaseDatabase.getInstance().getReference();
+        //rootref.child("Appliances").setValue("hello");
+        applianceref = rootref.child("Appliances");
+        mDatabaseRef= applianceref.child(user.getUid());
         choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +85,18 @@ public class newApplicanceActivity extends AppCompatActivity {
 
             }
         });
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Appliances.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
+
+
+
 
     private void uploadFile() {
         if (mImageUri != null) {
@@ -82,10 +104,14 @@ public class newApplicanceActivity extends AppCompatActivity {
             mUploadTask = fileReference.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(newApplicanceActivity.this, "Upload Successful", Toast.LENGTH_LONG).show();
-                    Upload up = new Upload(nameofitem.getText().toString().trim(),taskSnapshot.getMetadata().getReference().getDownloadUrl().toString());
+                    Upload up = new Upload(nameofitem.getText().toString().trim(),taskSnapshot.getMetadata().getReference().getDownloadUrl().toString(),
+                            statusofappliance.getText().toString(), nameofcategory.getText().toString());
 
-                    mDatabaseRef.child(nameofitem.getText().toString()).setValue(up);
+                    mDatabaseRef.child(nameofitem.getText().toString()).child("imageUri").setValue(mImageUri.toString());
+                    mDatabaseRef.child(nameofitem.getText().toString()).child("category").setValue(nameofcategory.getText().toString());
+                    mDatabaseRef.child(nameofitem.getText().toString()).child("title").setValue(nameofitem.getText().toString());
+                    mDatabaseRef.child(nameofitem.getText().toString()).child("status").setValue(statusofappliance.getText().toString());
+                    Toast.makeText(newApplicanceActivity.this, "Upload Successful", Toast.LENGTH_LONG).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -94,6 +120,9 @@ public class newApplicanceActivity extends AppCompatActivity {
                     Toast.makeText(newApplicanceActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "this is a sample toast", Toast.LENGTH_LONG).show();
         }
     }
     private String getFileExtension(Uri uri) {
@@ -117,8 +146,5 @@ public class newApplicanceActivity extends AppCompatActivity {
             mImageUri = data.getData();
             Picasso.get().load(mImageUri).into(applianceimage);
         }
-
-   
-
         }
     }

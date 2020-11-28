@@ -77,6 +77,9 @@ public class Groceries extends AppCompatActivity {
         groceriesRef = rootRef.child("Groceries");
         currentUserGroceriesRef = groceriesRef.child(user.getUid());
 
+        groceries = findViewById(R.id.Groceries);
+        adapter = new SimpleViewAdapter(this, R.layout.simple_row, items);
+
         //Navigation Bar code start
         NavigationView navigationView = findViewById(R.id.navigationview);
         navDrawer = (DrawerLayout) findViewById(R.id.groc);
@@ -132,7 +135,7 @@ public class Groceries extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
         });
-        groceries.setAdapter(adapter);
+
 
         currentUserGroceriesRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -152,6 +155,18 @@ public class Groceries extends AppCompatActivity {
             }
         });
 
+
+        groceries.setAdapter(adapter);
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HashMap<String,Object > map = new HashMap<>();
+                map.put(user.getUid(),databaseImage);   //need to give second argument as a map. key itemName and value itemCount.
+                groceriesRef.updateChildren(map);
+            }
+        });
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,7 +177,7 @@ public class Groceries extends AppCompatActivity {
         });
     }
 
-    private void showcreatedialog() {
+    void showcreatedialog() {
 
         final AlertDialog.Builder alert = new AlertDialog.Builder(Groceries.this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_for_adding, null);
@@ -274,7 +289,6 @@ public class Groceries extends AppCompatActivity {
             try {
                 startActivity(Intent.createChooser(share, "Send mail..."));
                 Toast.makeText(getApplicationContext(), "Sharing...", Toast.LENGTH_SHORT).show();
-                finish();
             } catch (android.content.ActivityNotFoundException ex) {
                 Toast.makeText(getApplicationContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
             }
