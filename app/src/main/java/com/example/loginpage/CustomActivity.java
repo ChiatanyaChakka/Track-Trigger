@@ -1,12 +1,5 @@
 package com.example.loginpage;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +16,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -47,7 +47,7 @@ public class CustomActivity extends AppCompatActivity {
     private FloatingActionButton addnewcustitem;
     private ListView custcatlist;
     HashMap<String, Boolean> stringBooleanHashMapcust;
-
+    private TextView emptyMsg;
     private int customButtonNumber;
     private FirebaseAuth auth;
     private DatabaseReference rootRef, categoryRef;
@@ -57,7 +57,8 @@ public class CustomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom);
 
-        addnewcustitem = (FloatingActionButton)findViewById(R.id.addNewCustomItem);
+        addnewcustitem = (FloatingActionButton) findViewById(R.id.addNewCustomItem);
+        emptyMsg = findViewById(R.id.EmptyMessage);
 
         Bundle intentBundle = getIntent().getExtras();
         customButtonNumber = intentBundle.getInt("buttonNumber");
@@ -78,9 +79,14 @@ public class CustomActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 stringBooleanHashMapcust.clear();
                 custcattitles.clear();
-                for (DataSnapshot snap: snapshot.getChildren()) {
-                        custcattitles.add(snap.getKey());
-                        stringBooleanHashMapcust.put(snap.getKey(), snap.getValue(boolean.class));
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    custcattitles.add(snap.getKey());
+                    stringBooleanHashMapcust.put(snap.getKey(), snap.getValue(boolean.class));
+                }
+                if (custcattitles.isEmpty()) {
+                    emptyMsg.setVisibility(View.VISIBLE);
+                } else {
+                    emptyMsg.setVisibility(View.INVISIBLE);
                 }
                 adapter = new SimpleCustomAdaptercust(CustomActivity.this, R.layout.row_for_profcategory, custcattitles);
                 custcatlist.setAdapter(adapter);

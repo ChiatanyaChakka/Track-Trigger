@@ -1,12 +1,5 @@
 package com.example.loginpage;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +16,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -47,6 +47,7 @@ public class ProfessionActivity extends AppCompatActivity {
     private ListView profcatlist;
     private FloatingActionButton addnewprofitem;
     HashMap<String, Boolean> stringBooleanHashMap;
+    private TextView emptyMessage;
 
     private int professionalButtonNumber;
     private FirebaseAuth auth;
@@ -60,6 +61,7 @@ public class ProfessionActivity extends AppCompatActivity {
         addnewprofitem = (FloatingActionButton) findViewById(R.id.addnewprofcat) ;
         searchbar = findViewById(R.id.searchbar);
         profcatlist = findViewById(R.id.profcatlistview);
+        emptyMessage = findViewById(R.id.EmptyMessage);
 
         Bundle intentBundle = getIntent().getExtras();
         professionalButtonNumber = intentBundle.getInt("buttonNumber");
@@ -78,9 +80,14 @@ public class ProfessionActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 stringBooleanHashMap.clear();
                 profcattitles.clear();
-                for (DataSnapshot snap: snapshot.getChildren()) {
-                        profcattitles.add(snap.getKey());
-                        stringBooleanHashMap.put(snap.getKey(), snap.getValue(boolean.class));
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    profcattitles.add(snap.getKey());
+                    stringBooleanHashMap.put(snap.getKey(), snap.getValue(boolean.class));
+                }
+                if (profcattitles.isEmpty()) {
+                    emptyMessage.setVisibility(View.VISIBLE);
+                } else {
+                    emptyMessage.setVisibility(View.INVISIBLE);
                 }
                 adapter = new SimpleCustomAdapter(ProfessionActivity.this, R.layout.row_for_profcategory, profcattitles);
                 profcatlist.setAdapter(adapter);

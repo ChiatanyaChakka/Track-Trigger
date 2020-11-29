@@ -13,13 +13,27 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <EditText
             android:layout_width="match_parent"
             android:id="@+id/search"
             android:paddingHorizontal="20dp"
+            android:textColor="@color/blacktheme"
+            android:textColorHint="@color/blacktheme"
             android:layout_height="wrap_content"
-            android:hint="Search for Products"
-            />
+            android:hint="Search for Products" />
+
+        <TextView
+            android:id="@+id/EmptyMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/advent_pro"
+            android:textColor="@color/blacktheme"
+            android:inputType="textMultiLine"
+            android:text="Your Groceries list is empty.\nAdd something and it will show up here!"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="40dp" />
 
         <ListView
             android:id="@+id/Groceries"

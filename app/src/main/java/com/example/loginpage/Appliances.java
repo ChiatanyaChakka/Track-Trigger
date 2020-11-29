@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,7 @@ public class Appliances extends AppCompatActivity {
     private FirebaseAuth auth;
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle toggle;
+    private TextView emptyMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class Appliances extends AppCompatActivity {
         setContentView(R.layout.activity_appliances);
         addnewappliance = (FloatingActionButton) findViewById(R.id.newappliancebutton);
         expandableListView = findViewById(R.id.applianceslistexpandable);
+        emptyMessage = findViewById(R.id.EmptyMessage);
 
         init();
 
@@ -124,19 +127,26 @@ public class Appliances extends AppCompatActivity {
         appliancesref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot snap: snapshot.getChildren()){
-                        HashMap<String, String> temp = new HashMap<>();
-                        arraylist.add(snap.getKey());
-                        System.out.println(((HashMap<String, String>) snap.getValue()).get("title"));
-                        temp = (HashMap<String, String>) snap.getValue();
-                        AppliancesData appliancesData = new AppliancesData(
-                                ((HashMap<String, String>) snap.getValue()).get("title"),
-                                ((HashMap<String, String>) snap.getValue()).get("status"),
-                                ((HashMap<String, String>) snap.getValue()).get("category"),
-                                ((HashMap<String, String>) snap.getValue()).get("imageUri")
-                        );
-                        hashMap.put(((HashMap<String, String>) snap.getValue()).get("title"), appliancesData);
-                        //System.out.println(hashMap.get("pic"));
+                hashMap.clear();
+                arraylist.clear();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    HashMap<String, String> temp = new HashMap<>();
+                    arraylist.add(snap.getKey());
+                    System.out.println(((HashMap<String, String>) snap.getValue()).get("title"));
+                    temp = (HashMap<String, String>) snap.getValue();
+                    AppliancesData appliancesData = new AppliancesData(
+                            ((HashMap<String, String>) snap.getValue()).get("title"),
+                            ((HashMap<String, String>) snap.getValue()).get("status"),
+                            ((HashMap<String, String>) snap.getValue()).get("category"),
+                            ((HashMap<String, String>) snap.getValue()).get("imageUri")
+                    );
+                    hashMap.put(((HashMap<String, String>) snap.getValue()).get("title"), appliancesData);
+                    //System.out.println(hashMap.get("pic"));
+                }
+                if (arraylist.isEmpty()) {
+                    emptyMessage.setVisibility(View.VISIBLE);
+                } else {
+                    emptyMessage.setVisibility(View.INVISIBLE);
                 }
                 adapter = new CustomAdapterForExpandable(Appliances.this, arraylist, hashMap);
                 expandableListView.setAdapter(adapter);

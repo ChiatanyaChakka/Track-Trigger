@@ -1,14 +1,7 @@
 package com.example.loginpage;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,8 +13,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -47,20 +45,18 @@ public class TriggerActivity extends AppCompatActivity {
     ArrayList<String> eventtitlesG;
     HashMap<String, HashMap<String, String>> map;
     private DatabaseReference rootref, triggerref;
+    private TextView emptyMsg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trigger);
         auth = FirebaseAuth.getInstance();
 
+        emptyMsg = findViewById(R.id.EmptyMessage);
         eventslist = findViewById(R.id.eventslistview);
         newevent = findViewById(R.id.addnewevent);
         eventtitlesG = new ArrayList<String>();
         map = new HashMap<>();
-        //ListView for events start
-        AdapterForEvents adapterForEvents = new AdapterForEvents(this, R.layout.row_for_events, eventtitlesG);
-        eventslist.setAdapter(adapterForEvents);
-        //ListView for events end
 
         //Navigation Bar code start
         NavigationView navigationView;
@@ -105,12 +101,22 @@ public class TriggerActivity extends AppCompatActivity {
         triggerref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot snap: snapshot.getChildren()){
+                eventtitlesG.clear();
+                map.clear();
+                for (DataSnapshot snap : snapshot.getChildren()) {
                     eventtitlesG.add(snap.getKey());
-                    map.put(snap.getKey(), (HashMap)snap.getValue());
+                    map.put(snap.getKey(), (HashMap) snap.getValue());
                     System.out.println(snap.getKey());
                 }
-                adapterForEvents.notifyDataSetChanged();
+                if (eventtitlesG.isEmpty()) {
+                    emptyMsg.setVisibility(View.VISIBLE);
+                } else {
+                    emptyMsg.setVisibility(View.INVISIBLE);
+                }
+                //ListView for events start
+                AdapterForEvents adapterForEvents = new AdapterForEvents(TriggerActivity.this, R.layout.row_for_events, eventtitlesG);
+                eventslist.setAdapter(adapterForEvents);
+                //ListView for events end
             }
 
             @Override

@@ -26,6 +26,26 @@
             android:hint="Search"
             android:padding="10dp" />
 
+        <TextView
+            android:id="@+id/EmptyMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="220dp"
+            android:layout_marginBottom="267dp"
+            android:fontFamily="@font/advent_pro"
+            android:gravity="center"
+            android:inputType="textMultiLine"
+            android:text="Your To-Do list is empty.\nAdd something and it will show up here!"
+            android:textColor="@color/blacktheme"
+            android:textSize="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_editor_absoluteX="0dp"
+            app:layout_editor_absoluteY="220dp" />
+
         <ListView
             android:layout_width="match_parent"
             android:layout_height="570dp"

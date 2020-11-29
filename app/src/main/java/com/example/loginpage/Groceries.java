@@ -51,6 +51,7 @@ public class Groceries extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private FirebaseAuth auth;
     private Button save;
+    private TextView emptyMessage;
 
     private HashMap<String,Integer> databaseImage;
 
@@ -64,6 +65,7 @@ public class Groceries extends AppCompatActivity {
         search = findViewById(R.id.search);
         auth = FirebaseAuth.getInstance();
         save = findViewById(R.id.saveButton);
+        emptyMessage = findViewById(R.id.EmptyMessage);
 
         items = new ArrayList<String>();
         databaseImage = new HashMap<>();
@@ -140,13 +142,19 @@ public class Groceries extends AppCompatActivity {
         currentUserGroceriesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!snapshot.exists()) {
-                }
+//                if (!snapshot.exists()) {
+//                    emptyMessage.setVisibility(View.INVISIBLE);
+//                }
                 items.clear();
                 databaseImage.clear();
                 for (DataSnapshot groceriesMap : snapshot.getChildren()) {
                     databaseImage.put(groceriesMap.getKey(), Integer.parseInt(groceriesMap.getValue().toString()));
                     items.add(groceriesMap.getKey());
+                }
+                if (items.isEmpty()) {
+                    emptyMessage.setVisibility(View.VISIBLE);
+                } else {
+                    emptyMessage.setVisibility(View.INVISIBLE);
                 }
                 adapter = new SimpleViewAdapter(Groceries.this, R.layout.simple_row, items);
                 groceries.setAdapter(adapter);

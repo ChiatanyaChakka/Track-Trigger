@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,7 @@ public class HomeMaintanence extends AppCompatActivity {
     private FirebaseAuth auth;
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle toggle;
+    private TextView emptyMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class HomeMaintanence extends AppCompatActivity {
         setContentView(R.layout.activity_home_maintanence);
         addNewMaintanence = (FloatingActionButton) findViewById(R.id.newmaintainancebutton);
         expandableListView = findViewById(R.id.maintainancelistexpandable);
+        emptyMessage = findViewById(R.id.EmptyMessage);
 
         init();
 
@@ -124,6 +127,8 @@ public class HomeMaintanence extends AppCompatActivity {
         maintanenceRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                hashMap.clear();
+                arraylist.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     HashMap<String, String> temp = new HashMap<>();
                     arraylist.add(snap.getKey());
@@ -137,6 +142,11 @@ public class HomeMaintanence extends AppCompatActivity {
                     );
                     hashMap.put(((HashMap<String, String>) snap.getValue()).get("title"), appliancesData);
                     //System.out.println(hashMap.get("pic"));
+                }
+                if (arraylist.isEmpty()) {
+                    emptyMessage.setVisibility(View.VISIBLE);
+                } else {
+                    emptyMessage.setVisibility(View.INVISIBLE);
                 }
                 adapter = new CustomAdapterForExpandable(HomeMaintanence.this, arraylist, hashMap);
                 expandableListView.setAdapter(adapter);

@@ -14,6 +14,26 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/EmptyMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="220dp"
+            android:layout_marginBottom="267dp"
+            android:fontFamily="@font/advent_pro"
+            android:gravity="center"
+            android:inputType="textMultiLine"
+            android:text="Your don't have any events set.\nAdd some and they will show up here!"
+            android:textColor="@color/blacktheme"
+            android:textSize="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_editor_absoluteX="0dp"
+            app:layout_editor_absoluteY="220dp" />
+
         <ListView
             android:id="@+id/eventslistview"
             android:layout_width="match_parent"
