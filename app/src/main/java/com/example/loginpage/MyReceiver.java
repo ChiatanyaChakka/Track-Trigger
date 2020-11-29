@@ -24,12 +24,14 @@ public class MyReceiver extends BroadcastReceiver {
     private FirebaseUser user;
     private DatabaseReference rootRef, userNameRef;
     private String username;
+    private String phonenum, docList;
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
         user = FirebaseAuth.getInstance().getCurrentUser();
-        String phonenum = intent.getExtras().getString("phone num");
-        String docList = intent.getExtras().getString("description");
+        phonenum = intent.getExtras().getString("phone num");
+        docList = intent.getExtras().getString("description");
 
         rootRef = FirebaseDatabase.getInstance().getReference();
         userNameRef = rootRef.child("Usernames").child(user.getUid());
@@ -42,6 +44,7 @@ public class MyReceiver extends BroadcastReceiver {
                 } else {
                     username = user.getDisplayName();
                 }
+                sendAlert(context);
             }
 
             @Override
@@ -49,6 +52,9 @@ public class MyReceiver extends BroadcastReceiver {
 
             }
         });
+    }
+
+    private void sendAlert(Context context) {
 
         //Sending SMS
         SmsManager smsManager = SmsManager.getDefault();
@@ -64,7 +70,9 @@ public class MyReceiver extends BroadcastReceiver {
         //Mail sending
         sender = new GmailSender("trackandtriggerr@gmail.com", "OOP@@T&T");
         new MyReceiver.MyAsyncClass(docList, username).execute();
+
     }
+
     class MyAsyncClass extends AsyncTask<Void, Void, Void> {
             String docList;
             String username;
