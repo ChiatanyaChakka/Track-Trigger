@@ -268,22 +268,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(AuthResult authResult) {
                 FirebaseUser user = auth.getCurrentUser();
-                    user.linkWithCredential(previousCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
-                                Toast.makeText(MainActivity.this,"Account Linking Successful!", Toast.LENGTH_SHORT).show();
-                            }else {
-                                Toast.makeText( MainActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-                            }
+                user.linkWithCredential(previousCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(MainActivity.this,"Account Linking Successful!", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText( MainActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    }
+                });
                 Toast.makeText(MainActivity.this, "Authentication Success!", Toast.LENGTH_SHORT).show();
                 prevCredential = null;
 
-                Intent intent =new Intent(MainActivity.this,DashBoard.class);
+                Intent intent = new Intent(MainActivity.this, DashBoard.class);
                 startActivity(intent);
                 finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
