@@ -134,7 +134,6 @@ public class Groceries extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showcreatedialog();
-                adapter.notifyDataSetChanged();
             }
         });
 
@@ -208,7 +207,14 @@ public class Groceries extends AppCompatActivity {
                     items.add(input.getText().toString());
                     databaseImage.put(input.getText().toString(),0);
                     alertDialog.dismiss();
-                    save.performClick();
+                    adapter = new SimpleViewAdapter(Groceries.this, R.layout.simple_row, items);
+                    groceries.setAdapter(adapter);
+
+                    if (items.isEmpty()){
+                        emptyMessage.setVisibility(View.VISIBLE);
+                    }else {
+                        emptyMessage.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
         });
@@ -244,6 +250,7 @@ public class Groceries extends AppCompatActivity {
                 viewHolder.increase = (Button) convertView.findViewById(R.id.more);
                 viewHolder.quantity = (TextView) convertView.findViewById(R.id.quantity);
                 viewHolder.itemname = (TextView) convertView.findViewById(R.id.itemtitle);
+                viewHolder.delete = (Button) convertView.findViewById(R.id.delete);
                 viewHolder.increase.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -267,6 +274,22 @@ public class Groceries extends AppCompatActivity {
                         databaseImage.remove(getItem(position));
                         databaseImage.put(getItem(position),count);
                         notifyDataSetChanged();
+                    }
+                });
+                viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        items.remove(viewHolder.itemname.getText().toString());
+                        databaseImage.remove(viewHolder.itemname.getText().toString());
+                        adapter = new SimpleViewAdapter(Groceries.this, R.layout.simple_row, items);
+                        groceries.setAdapter(adapter);
+
+                        if (items.isEmpty()){
+                            emptyMessage.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            emptyMessage.setVisibility(View.INVISIBLE);
+                        }
                     }
                 });
                 convertView.setTag(viewHolder);
@@ -322,6 +345,7 @@ public class Groceries extends AppCompatActivity {
         Button decrease;
         Button increase;
         TextView quantity;
+        Button delete;
     }
 
 
