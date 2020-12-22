@@ -66,7 +66,6 @@ public class Appliances extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), newApplicanceActivity.class);
                 startActivity(i);
-                finish();
             }
         });
 

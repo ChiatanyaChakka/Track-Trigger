@@ -3,6 +3,7 @@ package com.example.loginpage;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,7 +38,6 @@ public class newApplicanceActivity extends AppCompatActivity {
     private EditText nameofcategory;
     private EditText statusofappliance;
     private Button choose;
-    private Button upload;
     private Button create;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef, rootref, applianceref;
@@ -62,34 +62,34 @@ public class newApplicanceActivity extends AppCompatActivity {
         nameofcategory = (EditText) findViewById(R.id.categoryofappliance);
         statusofappliance = (EditText) findViewById(R.id.statusofappliance);
         choose = (Button) findViewById(R.id.choosefile);
-        upload = (Button) findViewById(R.id.upload);
         create = (Button) findViewById(R.id.CreateAppliance);
         mStorageRef= FirebaseStorage.getInstance().getReference("uploads");
         rootref = FirebaseDatabase.getInstance().getReference();
         //rootref.child("Appliances").setValue("hello");
         applianceref = rootref.child("Appliances");
-        mDatabaseRef= applianceref.child(user.getUid());
+        mDatabaseRef = applianceref.child(user.getUid());
+        progressDialog = new ProgressDialog(newApplicanceActivity.this);
         choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openFileChooser();
             }
         });
-        upload.setOnClickListener(new View.OnClickListener() {
+
+        create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog = new ProgressDialog(newApplicanceActivity.this);
                 progressDialog.setMessage("Please wait for upload to finish...");
                 progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.setCancelable(false);
                 progressDialog.show();
                 uploadFile();
-
             }
         });
-        create.setOnClickListener(new View.OnClickListener() {
+
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
-            public void onClick(View v) {
+            public void onCancel(DialogInterface dialog) {
                 Intent intent = new Intent(getApplicationContext(), Appliances.class);
                 startActivity(intent);
                 finish();

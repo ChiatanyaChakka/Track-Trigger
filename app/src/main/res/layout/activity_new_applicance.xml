@@ -150,30 +150,14 @@
         app:layout_constraintVertical_bias="0.604" />
 
     <Button
-        android:id="@+id/upload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="232dp"
-        android:layout_marginLeft="232dp"
-        android:layout_marginTop="484dp"
-        android:layout_marginEnd="69dp"
-        android:layout_marginRight="69dp"
-        android:layout_marginBottom="147dp"
-        android:text="Upload"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
         android:id="@+id/choosefile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="71dp"
-        android:layout_marginLeft="71dp"
+        android:layout_marginStart="152dp"
+        android:layout_marginLeft="152dp"
         android:layout_marginTop="476dp"
-        android:layout_marginEnd="222dp"
-        android:layout_marginRight="222dp"
+        android:layout_marginEnd="153dp"
+        android:layout_marginRight="153dp"
         android:layout_marginBottom="147dp"
         android:text="Choose\nFile"
         app:layout_constraintBottom_toBottomOf="parent"
