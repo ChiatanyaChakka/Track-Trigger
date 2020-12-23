@@ -1,6 +1,7 @@
 package com.example.loginpage;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +47,7 @@ public class otpverification extends AppCompatActivity {
     private Button redirect;
     private String profession;
     private GmailSender sender;
+    private AlertDialog pDialog;
 
     private static int OTPphone;
     private static int OTPmail;
@@ -74,7 +75,7 @@ public class otpverification extends AppCompatActivity {
         phonedone = false;
         maildone = false;
         redirect = findViewById(R.id.RegisterAndRedirectToDashbard);
-        sender = new GmailSender("trackandtriggerr@gmail.com", "OOP@@T&T");
+        sender = new GmailSender();
 
         auth = FirebaseAuth.getInstance();
         rootRef = FirebaseDatabase.getInstance().getReference();
@@ -248,12 +249,15 @@ public class otpverification extends AppCompatActivity {
             try {
 
                 // Add subject, Body, your mail Id, and receiver mail Id.
+                System.out.println("Trying to send");
                 sender.sendMail("OTP--Track and Trigger app",
                         "Never share your One-Time-Password with anyone\nYour OTP for verification of the mail is" + Integer.toString(OTPmail),
                         "trackandtriggerr@gmail.com", mailid);
-                Log.d("send", "done");
+
+                System.out.println("Mail otp sent");
+
             } catch (Exception ex) {
-                Log.d("exceptionsending", ex.toString());
+                System.out.println("Mail otp sent\n" + ex.getMessage());
             }
             return null;
         }

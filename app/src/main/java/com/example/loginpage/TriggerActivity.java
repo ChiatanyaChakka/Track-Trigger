@@ -130,7 +130,6 @@ public class TriggerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), NewEventSetter.class);
                 startActivity(i);
-                finish();
             }
         });
 

@@ -2,11 +2,20 @@ package com.example.loginpage;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.Security;
+import java.util.HashMap;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -21,18 +30,30 @@ import javax.mail.internet.MimeMessage;
 
 public class GmailSender extends javax.mail.Authenticator {
     private String mailhost = "smtp.gmail.com";
-    private String user;
-    private String password;
+    private static String user;
+    private static String password;
     private Session session;
+    private static DatabaseReference adminRef;
 
     static {
         Security.addProvider(new JSSEProvider());
+
+        adminRef = FirebaseDatabase.getInstance().getReference().child("Admin");
+        adminRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                user = ((HashMap) snapshot.getValue()).get("mail").toString();
+                password = ((HashMap) snapshot.getValue()).get("pw").toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
-    public GmailSender(String user, String password) {
-        this.user = user;
-        this.password = password;
-
+    public GmailSender() {
         Properties props = new Properties();
         props.setProperty("mail.transport.protocol", "smtp");
         props.setProperty("mail.host", mailhost);
@@ -44,7 +65,7 @@ public class GmailSender extends javax.mail.Authenticator {
         props.put("mail.smtp.socketFactory.fallback", "false");
         props.setProperty("mail.smtp.quitwait", "false");
 
-        session = Session.getDefaultInstance(props, this); //this is for setting how application will interact with the provider
+        session = Session.getDefaultInstance(props, GmailSender.this); //this is for setting how application will interact with the provider
     }
 
     protected PasswordAuthentication getPasswordAuthentication() {
@@ -64,7 +85,8 @@ public class GmailSender extends javax.mail.Authenticator {
                 message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
             Transport.send(message);
         }catch(Exception e){
-            Log.d("Error", "sendingMailError"+ e.getMessage());
+            Log.d("Error", "sendingMailError" + e.getMessage());
+            System.out.println(e.getMessage() + " error");
         }
     }
 

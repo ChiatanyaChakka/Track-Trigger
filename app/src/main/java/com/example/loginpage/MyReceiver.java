@@ -68,7 +68,7 @@ public class MyReceiver extends BroadcastReceiver {
 
 
         //Mail sending
-        sender = new GmailSender("trackandtriggerr@gmail.com", "OOP@@T&T");
+        sender = new GmailSender();
         new MyReceiver.MyAsyncClass(docList, username).execute();
 
     }
