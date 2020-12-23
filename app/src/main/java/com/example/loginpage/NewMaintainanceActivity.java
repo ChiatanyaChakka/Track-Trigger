@@ -3,6 +3,7 @@ package com.example.loginpage;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 public class NewMaintainanceActivity extends AppCompatActivity {
 
@@ -62,34 +65,34 @@ public class NewMaintainanceActivity extends AppCompatActivity {
         nameofcategory = (EditText) findViewById(R.id.categoryofMaintainance);
         statusofMaintainance = (EditText) findViewById(R.id.statusofMaintainance);
         choose = (Button) findViewById(R.id.choosefileMaintainance);
-        upload = (Button) findViewById(R.id.uploadMaintainance);
         create = (Button) findViewById(R.id.CreateMaintainance);
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         rootref = FirebaseDatabase.getInstance().getReference();
         //rootref.child("Appliances").setValue("hello");
         maintainanceRef = rootref.child("Maintainance");
         mDatabaseRef = maintainanceRef.child(user.getUid());
+        progressDialog = new ProgressDialog(NewMaintainanceActivity.this);
         choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openFileChooser();
             }
         });
-        upload.setOnClickListener(new View.OnClickListener() {
+
+        create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog = new ProgressDialog(NewMaintainanceActivity.this);
                 progressDialog.setMessage("Please wait for upload to finish...");
                 progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.setCancelable(false);
                 progressDialog.show();
                 uploadFile();
-
             }
         });
-        create.setOnClickListener(new View.OnClickListener() {
+
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
-            public void onClick(View v) {
+            public void onCancel(DialogInterface dialog) {
                 Intent intent = new Intent(getApplicationContext(), HomeMaintanence.class);
                 startActivity(intent);
                 finish();
@@ -112,10 +115,18 @@ public class NewMaintainanceActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             System.out.println(uri + " thi is random");
-                            mDatabaseRef.child(nameofitem.getText().toString()).child("imageUri").setValue(uri.toString());
-                            mDatabaseRef.child(nameofitem.getText().toString()).child("category").setValue(nameofcategory.getText().toString());
-                            mDatabaseRef.child(nameofitem.getText().toString()).child("title").setValue(nameofitem.getText().toString());
-                            mDatabaseRef.child(nameofitem.getText().toString()).child("status").setValue(statusofMaintainance.getText().toString());
+                            HashMap<String, Object> map = new HashMap<>();
+                            map.put("imageUri", uri.toString());
+                            map.put("category", nameofcategory.getText().toString());
+                            map.put("title", nameofitem.getText().toString());
+                            map.put("status", statusofMaintainance.getText().toString());
+                            mDatabaseRef.child(nameofitem.getText().toString()).setValue(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(NewMaintainanceActivity.this, "Upload Successful", Toast.LENGTH_LONG).show();
+                                    progressDialog.cancel();
+                                }
+                            });
                         }
 
                     }).addOnFailureListener(new OnFailureListener() {
@@ -124,9 +135,6 @@ public class NewMaintainanceActivity extends AppCompatActivity {
 
                         }
                     });
-
-                    Toast.makeText(NewMaintainanceActivity.this, "Upload Successful", Toast.LENGTH_LONG).show();
-                    progressDialog.cancel();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:background="#ffd647"
@@ -7,12 +8,11 @@
     android:padding="5dp">
 
     <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
         android:id="@+id/checkboxprofcat"
-
-        />
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,6 +21,23 @@
         android:id="@+id/titleprofcat"
         android:paddingVertical="20dp"
         android:textSize="30dp"
+        android:layout_marginLeft="70dp"
         android:fontFamily="@font/advent_pro"
-        android:textColor="@color/black"/>
-</LinearLayout>
+        android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/delete"
+        android:layout_width="12dp"
+        android:layout_height="24dp"
+        android:drawablePadding="0dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:includeFontPadding="false"
+        android:padding="0dp"
+        android:text="x"
+        android:textAllCaps="false"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:cornerRadius="10dp"
+        android:layout_alignParentRight="true" />
+</RelativeLayout>

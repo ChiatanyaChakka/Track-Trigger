@@ -1,97 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/childlayout"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#ffd647"
+    android:orientation="vertical"
     android:padding="15dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_gravity="center"
-            android:id="@+id/itemimagechild"/>
-       <LinearLayout
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:orientation="vertical">
-           <TextView
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:textColor="#000000"
-               android:text="Title"
-               android:fontFamily="@font/advent_pro"
-               android:id="@+id/titlechild"
-               android:textSize="30dp"
-               android:layout_margin="10dp"/>
-           <TextView
-               android:id="@+id/categorychild"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:textColor="#000000"
-               android:textSize="14dp"
-               android:fontFamily="@font/advent_pro"
-               android:layout_margin="10dp"
-               android:text="Category" />
 
-       </LinearLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/itemimagechild"
+            android:layout_width="90dp"
+            android:layout_alignParentLeft="true"
+            android:layout_height="90dp"
+            android:layout_gravity="center" />
 
         <LinearLayout
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_toRightOf="@+id/itemimagechild"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/titlechild"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:fontFamily="@font/advent_pro"
+                android:text="Title"
+                android:textColor="#000000"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/categorychild"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:fontFamily="@font/advent_pro"
+                android:text="Category"
+                android:textColor="#000000"
+                android:textSize="14dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:outlineAmbientShadowColor="#ffd647"
-            android:orientation="vertical">
+            android:layout_toRightOf="@+id/title"
+            android:orientation="vertical"
+            android:outlineAmbientShadowColor="#ffd647">
+
             <ImageButton
+                android:id="@+id/sharingbox"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:id="@+id/sharingbox"
                 android:background="#FFD647"
                 android:src="@android:drawable/ic_menu_send"
-                android:tooltipText="Share"/>
+                android:tooltipText="Share" />
+
             <TextView
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="17dp"
-                android:textColor="#000000"
+                android:layout_gravity="center"
                 android:fontFamily="@font/advent_pro"
-                android:text="Share"/>
+                android:text="Share"
+                android:textColor="#000000"
+                android:textSize="17dp" />
         </LinearLayout>
 
-
-
-    </LinearLayout>
+        <Button
+            android:id="@+id/delete"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_width="14dp"
+            android:layout_height="28dp"
+            android:drawablePadding="0dp"
+            android:includeFontPadding="false"
+            android:layout_gravity="center_vertical"
+            android:padding="0dp"
+            android:text="x"
+            android:textAllCaps="false"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:cornerRadius="10dp" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="15dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
             android:fontFamily="@font/advent_pro"
-            android:text="Status/Notes: "/>
+            android:text="Status/Notes: "
+            android:textColor="#000000" />
+
         <TextView
-            android:layout_width="wrap_content"
-            android:padding="5dp"
             android:id="@+id/statusornotesofchild"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
             android:fontFamily="@font/advent_pro"
+            android:inputType="textMultiLine"
+            android:padding="5dp"
             android:text="This is the status or the notes the user wants to enter for the appliance. This will be a multiline text"
-            android:inputType="textMultiLine"/>
+            android:textColor="#000000" />
 
     </LinearLayout>
 

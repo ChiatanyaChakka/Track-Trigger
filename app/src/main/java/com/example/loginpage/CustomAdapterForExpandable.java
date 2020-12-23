@@ -3,7 +3,6 @@ package com.example.loginpage;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
@@ -13,14 +12,17 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -36,11 +38,17 @@ public class CustomAdapterForExpandable extends BaseExpandableListAdapter {
     private Context context;
     private List<String> titles;
     private HashMap<String, AppliancesData> hashMap;
+    private String activity;
 
     public CustomAdapterForExpandable(Context context, List<String> titles, HashMap<String, AppliancesData> hashMap) {
         this.context = context;
         this.titles = titles;
         this.hashMap = hashMap;
+        if (context.toString().contains("Appliances")) {
+            this.activity = "Appliances";
+        } else {
+            this.activity = "Maintainance";
+        }
     }
 
     @Override
@@ -133,11 +141,28 @@ public class CustomAdapterForExpandable extends BaseExpandableListAdapter {
                         share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         context.startActivity(Intent.createChooser(share, "Share your appliance"));
                     }
+
                     @Override
-                    public void onBitmapFailed(Exception e, Drawable errorDrawable) { }
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                    }
+
                     @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) { }
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                    }
                 });
+            }
+        });
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference ref = reference.child(activity).child(user.getUid());
+
+        Button delete = (Button) convertView.findViewById(R.id.delete);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println(context.getApplicationContext().toString());
+                ref.child(appliancesData.getTitle()).removeValue();
             }
         });
 

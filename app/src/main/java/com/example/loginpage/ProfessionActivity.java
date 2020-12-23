@@ -58,7 +58,9 @@ public class ProfessionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profession);
 
-        addnewprofitem = (FloatingActionButton) findViewById(R.id.addnewprofcat) ;
+        System.out.println("Entered professional activity");
+
+        addnewprofitem = (FloatingActionButton) findViewById(R.id.addnewprofcat);
         searchbar = findViewById(R.id.searchbar);
         profcatlist = findViewById(R.id.profcatlistview);
         emptyMessage = findViewById(R.id.EmptyMessage);
@@ -223,12 +225,24 @@ public class ProfessionActivity extends AppCompatActivity {
                 ViewHolderprof viewHolderprof = new ViewHolderprof();
                 viewHolderprof.itemnameprof = (TextView) convertView.findViewById(R.id.titleprofcat);
                 viewHolderprof.checkBox = (CheckBox) convertView.findViewById(R.id.checkboxprofcat);
+                viewHolderprof.delete = (Button) convertView.findViewById(R.id.delete);
                 viewHolderprof.checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        stringBooleanHashMap.put(getItem(position),viewHolderprof.checkBox.isChecked());
-                        HashMap<String,Object> map = new HashMap<>();
-                        map.put(String.valueOf(professionalButtonNumber),stringBooleanHashMap);
+                        stringBooleanHashMap.put(getItem(position), viewHolderprof.checkBox.isChecked());
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put(String.valueOf(professionalButtonNumber), stringBooleanHashMap);
+                        categoryRef.getParent().updateChildren(map);
+                        notifyDataSetChanged();
+                    }
+                });
+                viewHolderprof.delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        profcattitles.remove(viewHolderprof.itemnameprof.getText().toString());
+                        stringBooleanHashMap.remove(viewHolderprof.itemnameprof.getText().toString());
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put(String.valueOf(professionalButtonNumber), stringBooleanHashMap);
                         categoryRef.getParent().updateChildren(map);
                         notifyDataSetChanged();
                     }
@@ -245,5 +259,6 @@ public class ProfessionActivity extends AppCompatActivity {
     class ViewHolderprof{
         TextView itemnameprof;
         CheckBox checkBox;
+        Button delete;
     }
 }

@@ -222,12 +222,24 @@ public class CustomActivity extends AppCompatActivity {
                 ViewHoldercust viewHolderprof = new ViewHoldercust();
                 viewHolderprof.itemnameprof = (TextView) convertView.findViewById(R.id.titleprofcat);
                 viewHolderprof.checkBox = (CheckBox) convertView.findViewById(R.id.checkboxprofcat);
+                viewHolderprof.delete = (Button) convertView.findViewById(R.id.delete);
                 viewHolderprof.checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        stringBooleanHashMapcust.put(getItem(position),viewHolderprof.checkBox.isChecked());
-                        HashMap<String,Object> map = new HashMap<>();
-                        map.put(String.valueOf(customButtonNumber),stringBooleanHashMapcust);
+                        stringBooleanHashMapcust.put(getItem(position), viewHolderprof.checkBox.isChecked());
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put(String.valueOf(customButtonNumber), stringBooleanHashMapcust);
+                        categoryRef.getParent().updateChildren(map);
+                        notifyDataSetChanged();
+                    }
+                });
+                viewHolderprof.delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        custcattitles.remove(viewHolderprof.itemnameprof.getText().toString());
+                        stringBooleanHashMapcust.remove(viewHolderprof.itemnameprof.getText().toString());
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put(String.valueOf(customButtonNumber), stringBooleanHashMapcust);
                         categoryRef.getParent().updateChildren(map);
                         notifyDataSetChanged();
                     }
@@ -244,5 +256,6 @@ public class CustomActivity extends AppCompatActivity {
     class ViewHoldercust{
         TextView itemnameprof;
         CheckBox checkBox;
+        Button delete;
     }
 }

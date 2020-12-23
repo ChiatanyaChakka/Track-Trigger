@@ -30,9 +30,11 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+
 public class newApplicanceActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_REQUEST =123 ;
+    private static final int PICK_IMAGE_REQUEST = 123;
     private ImageView applianceimage;
     private EditText nameofitem;
     private EditText nameofcategory;
@@ -113,11 +115,19 @@ public class newApplicanceActivity extends AppCompatActivity {
                     storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            System.out.println(uri+" thi is random");
-                            mDatabaseRef.child(nameofitem.getText().toString()).child("imageUri").setValue(uri.toString());
-                            mDatabaseRef.child(nameofitem.getText().toString()).child("category").setValue(nameofcategory.getText().toString());
-                            mDatabaseRef.child(nameofitem.getText().toString()).child("title").setValue(nameofitem.getText().toString());
-                            mDatabaseRef.child(nameofitem.getText().toString()).child("status").setValue(statusofappliance.getText().toString());
+                            System.out.println(uri + " thi is random");
+                            HashMap<String, Object> map = new HashMap<>();
+                            map.put("imageUri", uri.toString());
+                            map.put("category", nameofcategory.getText().toString());
+                            map.put("title", nameofitem.getText().toString());
+                            map.put("status", statusofappliance.getText().toString());
+                            mDatabaseRef.child(nameofitem.getText().toString()).setValue(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(newApplicanceActivity.this, "Upload Successful", Toast.LENGTH_LONG).show();
+                                    progressDialog.cancel();
+                                }
+                            });
                         }
 
                     }).addOnFailureListener(new OnFailureListener() {
@@ -126,9 +136,6 @@ public class newApplicanceActivity extends AppCompatActivity {
 
                         }
                     });
-
-                    Toast.makeText(newApplicanceActivity.this, "Upload Successful", Toast.LENGTH_LONG).show();
-                    progressDialog.cancel();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
