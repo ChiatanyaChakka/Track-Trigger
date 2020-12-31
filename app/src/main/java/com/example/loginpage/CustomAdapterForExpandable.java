@@ -1,6 +1,8 @@
 package com.example.loginpage;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -39,11 +41,14 @@ public class CustomAdapterForExpandable extends BaseExpandableListAdapter {
     private List<String> titles;
     private HashMap<String, AppliancesData> hashMap;
     private String activity;
+    private boolean delete;
+    private AlertDialog deleteDialog;
 
-    public CustomAdapterForExpandable(Context context, List<String> titles, HashMap<String, AppliancesData> hashMap) {
+    public CustomAdapterForExpandable(Context context, List<String> titles, HashMap<String, AppliancesData> hashMap, AlertDialog dialog) {
         this.context = context;
         this.titles = titles;
         this.hashMap = hashMap;
+        this.deleteDialog = dialog;
         if (context.toString().contains("Appliances")) {
             this.activity = "Appliances";
         } else {
@@ -156,13 +161,27 @@ public class CustomAdapterForExpandable extends BaseExpandableListAdapter {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference ref = reference.child(activity).child(user.getUid());
+        ;
 
         Button delete = (Button) convertView.findViewById(R.id.delete);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                deleteDialog.setButton(DialogInterface.BUTTON_POSITIVE, null, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ref.child(appliancesData.getTitle()).removeValue();
+                        deleteDialog.cancel();
+                    }
+                });
+                deleteDialog.setButton(DialogInterface.BUTTON_NEGATIVE, null, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteDialog.cancel();
+                    }
+                });
+                deleteDialog.show();
                 System.out.println(context.getApplicationContext().toString());
-                ref.child(appliancesData.getTitle()).removeValue();
             }
         });
 

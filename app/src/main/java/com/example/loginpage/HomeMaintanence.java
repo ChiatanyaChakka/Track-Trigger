@@ -1,9 +1,12 @@
 package com.example.loginpage;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -39,6 +42,10 @@ public class HomeMaintanence extends AppCompatActivity {
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle toggle;
     private TextView emptyMessage;
+    private AlertDialog deleteDialog;
+    private AlertDialog.Builder builder;
+    private View view;
+    private Button confirm, cancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,29 @@ public class HomeMaintanence extends AppCompatActivity {
         emptyMessage = findViewById(R.id.EmptyMessage);
 
         init();
+
+        builder = new AlertDialog.Builder(HomeMaintanence.this);
+        view = getLayoutInflater().inflate(R.layout.delete_confirmation_dialogue, null);
+        builder.setView(view);
+        builder.setCancelable(false);
+        deleteDialog = builder.create();
+        deleteDialog.setCanceledOnTouchOutside(false);
+        confirm = view.findViewById(R.id.confirmDelete);
+        confirm.setSoundEffectsEnabled(false);
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteDialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
+            }
+        });
+        cancel = view.findViewById(R.id.cancelDelete);
+        cancel.setSoundEffectsEnabled(false);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteDialog.getButton(DialogInterface.BUTTON_NEGATIVE).performClick();
+            }
+        });
 
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
@@ -148,7 +178,7 @@ public class HomeMaintanence extends AppCompatActivity {
                 } else {
                     emptyMessage.setVisibility(View.INVISIBLE);
                 }
-                adapter = new CustomAdapterForExpandable(HomeMaintanence.this, arraylist, hashMap);
+                adapter = new CustomAdapterForExpandable(HomeMaintanence.this, arraylist, hashMap, deleteDialog);
                 expandableListView.setAdapter(adapter);
             }
 
