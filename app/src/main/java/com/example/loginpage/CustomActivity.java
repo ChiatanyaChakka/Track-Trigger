@@ -51,6 +51,11 @@ public class CustomActivity extends AppCompatActivity {
     private int customButtonNumber;
     private FirebaseAuth auth;
     private DatabaseReference rootRef, categoryRef;
+    private View confirmationDialogView;
+    private Button confirm, cancel;
+    private TextView logoutMsg;
+    private android.app.AlertDialog.Builder builder;
+    private android.app.AlertDialog logoutDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +68,11 @@ public class CustomActivity extends AppCompatActivity {
         Bundle intentBundle = getIntent().getExtras();
         customButtonNumber = intentBundle.getInt("buttonNumber");
 
+        confirmationDialogView = getLayoutInflater().inflate(R.layout.action_confirmation_dialogue, null);
+
         auth = FirebaseAuth.getInstance();
         rootRef = FirebaseDatabase.getInstance().getReference();
-        categoryRef = rootRef.child("DashBoard").child(auth.getCurrentUser().getUid()+" "+"custom").child(String.valueOf(customButtonNumber));
+        categoryRef = rootRef.child("DashBoard").child(auth.getCurrentUser().getUid() + " " + "custom").child(String.valueOf(customButtonNumber));
         searchbar = findViewById(R.id.searchbarcust);
 
         //Temp
@@ -125,12 +132,12 @@ public class CustomActivity extends AppCompatActivity {
                         if(input.getText().toString().equals("")){
                             Toast.makeText(getApplicationContext(), "Please enter some data", Toast.LENGTH_SHORT).show();
                         }
-                        else{
+                        else {
                             custcattitles.add(input.getText().toString());
-                            stringBooleanHashMapcust.put(input.getText().toString(),false);
+                            stringBooleanHashMapcust.put(input.getText().toString(), false);
                             adapter.notifyDataSetChanged();
-                            HashMap<String,Object> map = new HashMap<>();
-                            map.put(String.valueOf(customButtonNumber),stringBooleanHashMapcust);
+                            HashMap<String, Object> map = new HashMap<>();
+                            map.put(String.valueOf(customButtonNumber), stringBooleanHashMapcust);
                             categoryRef.getParent().updateChildren(map);
                             alertDialog.dismiss();
                         }
@@ -138,6 +145,39 @@ public class CustomActivity extends AppCompatActivity {
                 });
             }
         });
+
+        //Dialog for logout confirmation
+        builder = new android.app.AlertDialog.Builder(CustomActivity.this);
+        builder.setCancelable(false);
+        builder.setView(confirmationDialogView);
+        confirm = confirmationDialogView.findViewById(R.id.confirmAction);
+        cancel = confirmationDialogView.findViewById(R.id.cancelAction);
+        logoutMsg = confirmationDialogView.findViewById(R.id.confirmMsg);
+        logoutDialog = builder.create();
+        logoutDialog.setCanceledOnTouchOutside(false);
+
+        logoutMsg.setText("Do you really want to logout?");
+        confirm.setText("Confirm Logout");
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                logoutDialog.cancel();
+                Toast.makeText(getApplicationContext(), "Signing out...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutDialog.cancel();
+            }
+        });
+        //dialog for logout confirmation
 
         //Navigation code start
         NavigationView navigationView;
@@ -162,11 +202,7 @@ public class CustomActivity extends AppCompatActivity {
                     finish();
                 }
                 else if (id == R.id.logout){
-                    auth.signOut();
-                    Toast.makeText(getApplicationContext(),"Signing out...", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    logoutDialog.show();
                 }else if (id == R.id.profile){
                     Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(profile);

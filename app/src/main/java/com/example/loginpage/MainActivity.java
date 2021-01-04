@@ -307,6 +307,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser!=null){
             Intent intent =new Intent(MainActivity.this,DashBoard.class);
             startActivity(intent);
+            finish();
         }
     }
 

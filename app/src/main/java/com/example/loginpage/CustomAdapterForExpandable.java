@@ -41,14 +41,13 @@ public class CustomAdapterForExpandable extends BaseExpandableListAdapter {
     private List<String> titles;
     private HashMap<String, AppliancesData> hashMap;
     private String activity;
-    private boolean delete;
-    private AlertDialog deleteDialog;
+    private View deleteConfirmView;
 
-    public CustomAdapterForExpandable(Context context, List<String> titles, HashMap<String, AppliancesData> hashMap, AlertDialog dialog) {
+    public CustomAdapterForExpandable(Context context, List<String> titles, HashMap<String, AppliancesData> hashMap, View view) {
         this.context = context;
         this.titles = titles;
         this.hashMap = hashMap;
-        this.deleteDialog = dialog;
+        this.deleteConfirmView = view;
         if (context.toString().contains("Appliances")) {
             this.activity = "Appliances";
         } else {
@@ -95,16 +94,18 @@ public class CustomAdapterForExpandable extends BaseExpandableListAdapter {
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 
         AppliancesData appliancesData = (AppliancesData) getChild(groupPosition, 0);
+
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.parents_expandable, null);
         }
+
         ImageView imageView = (ImageView) convertView.findViewById(R.id.itemimageparent);
         TextView title = (TextView) convertView.findViewById(R.id.nameofitemparent);
         TextView category = (TextView) convertView.findViewById(R.id.categoryofitemparent);
+
         title.setText(appliancesData.getTitle());
         category.setText(appliancesData.getCategory());
-        //Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), appliancesData.getImageUri());
         Picasso.get().load(appliancesData.getImageUri()).into(imageView);
         return convertView;
     }
@@ -112,22 +113,25 @@ public class CustomAdapterForExpandable extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         final AppliancesData appliancesData = (AppliancesData) getChild(groupPosition, childPosition);
-        if(convertView == null){
+
+        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             convertView = inflater.inflate(R.layout.children_expandable, null);
         }
+
         CircleImageView circleImageView = convertView.findViewById(R.id.itemimagechild);
-        //Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), appliancesData.getImageUri());
         TextView name = (TextView) convertView.findViewById(R.id.titlechild);
         TextView category = (TextView) convertView.findViewById(R.id.categorychild);
         TextView status = (TextView) convertView.findViewById(R.id.statusornotesofchild);
+        Button delete = (Button) convertView.findViewById(R.id.delete);
+        ImageButton sharingbox = (ImageButton) convertView.findViewById(R.id.sharingbox);
+
         name.setText(appliancesData.getTitle());
         category.setText(appliancesData.getCategory());
         status.setText(appliancesData.getDescription());
         Picasso.get().load(appliancesData.getImageUri()).into(circleImageView);
 
-        ImageButton sharingbox = (ImageButton) convertView.findViewById(R.id.sharingbox);
         sharingbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,25 +165,44 @@ public class CustomAdapterForExpandable extends BaseExpandableListAdapter {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference ref = reference.child(activity).child(user.getUid());
-        ;
 
-        Button delete = (Button) convertView.findViewById(R.id.delete);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        TextView deleteMsg = deleteConfirmView.findViewById(R.id.confirmMsg);
+        Button confirm = deleteConfirmView.findViewById(R.id.confirmAction);
+        Button cancel = deleteConfirmView.findViewById(R.id.cancelAction);
+        builder.setView(deleteConfirmView);
+        builder.setCancelable(false);
+        AlertDialog deleteDialog = builder.create();
+        deleteDialog.setCanceledOnTouchOutside(false);
+
+        deleteMsg.setText("Do you really want to delete this entry?");
+        confirm.setText("Confirm Delete");
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ref.child(appliancesData.getTitle()).removeValue();
+                deleteDialog.cancel();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteDialog.cancel();
+            }
+        });
+
+        deleteDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+
+            }
+        });
+
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteDialog.setButton(DialogInterface.BUTTON_POSITIVE, null, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ref.child(appliancesData.getTitle()).removeValue();
-                        deleteDialog.cancel();
-                    }
-                });
-                deleteDialog.setButton(DialogInterface.BUTTON_NEGATIVE, null, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteDialog.cancel();
-                    }
-                });
                 deleteDialog.show();
                 System.out.println(context.getApplicationContext().toString());
             }

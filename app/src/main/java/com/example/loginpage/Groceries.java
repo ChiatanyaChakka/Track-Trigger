@@ -53,10 +53,16 @@ public class Groceries extends AppCompatActivity {
     private Button save;
     private TextView emptyMessage;
 
-    private HashMap<String,Integer> databaseImage;
+    private HashMap<String, Integer> databaseImage;
 
     private FirebaseUser user;
     private DatabaseReference rootRef, currentUserGroceriesRef, groceriesRef;
+
+    private View confirmationDialogView;
+    private Button confirm, cancel;
+    private TextView logoutMsg;
+    private android.app.AlertDialog.Builder builder;
+    private android.app.AlertDialog logoutDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,7 @@ public class Groceries extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         save = findViewById(R.id.saveButton);
         emptyMessage = findViewById(R.id.EmptyMessage);
+        confirmationDialogView = getLayoutInflater().inflate(R.layout.action_confirmation_dialogue, null);
 
         items = new ArrayList<String>();
         databaseImage = new HashMap<>();
@@ -77,6 +84,39 @@ public class Groceries extends AppCompatActivity {
         currentUserGroceriesRef = groceriesRef.child(user.getUid());
 
         groceries = findViewById(R.id.Groceries);
+
+        //Dialog for logout confirmation
+        builder = new android.app.AlertDialog.Builder(Groceries.this);
+        builder.setCancelable(false);
+        builder.setView(confirmationDialogView);
+        confirm = confirmationDialogView.findViewById(R.id.confirmAction);
+        cancel = confirmationDialogView.findViewById(R.id.cancelAction);
+        logoutMsg = confirmationDialogView.findViewById(R.id.confirmMsg);
+        logoutDialog = builder.create();
+        logoutDialog.setCanceledOnTouchOutside(false);
+
+        logoutMsg.setText("Do you really want to logout?");
+        confirm.setText("Confirm Logout");
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                logoutDialog.cancel();
+                Toast.makeText(getApplicationContext(), "Signing out...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutDialog.cancel();
+            }
+        });
+        //dialog for logout confirmation
 
         //Navigation Bar code start
         NavigationView navigationView = findViewById(R.id.navigationview);
@@ -93,8 +133,6 @@ public class Groceries extends AppCompatActivity {
                     Intent i = new Intent(getApplicationContext(), TriggerActivity.class);
                     startActivity(i);
                     finish();
-//                    Intent i = new Intent(getApplicationContext(), NewEventSetter.class);
-//                    startActivity(i);
                 }
                 else if (id == R.id.dashboard){
                     Intent dashboard = new Intent(getApplicationContext(), DashBoard.class);
@@ -102,11 +140,7 @@ public class Groceries extends AppCompatActivity {
                     finish();
                 }
                 else if (id == R.id.logout){
-                    auth.signOut();
-                    Toast.makeText(getApplicationContext(),"Signing out...", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    logoutDialog.show();
                 }else if (id == R.id.profile){
                     Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(profile);
@@ -116,8 +150,6 @@ public class Groceries extends AppCompatActivity {
             }
         });
         //Navigation bar code end
-
-        groceries = findViewById(R.id.Groceries);
 
         //Search bar started
         search.addTextChangedListener(new TextWatcher() {
@@ -173,6 +205,7 @@ public class Groceries extends AppCompatActivity {
                 HashMap<String,Object > map = new HashMap<>();
                 map.put(user.getUid(),databaseImage);   //need to give second argument as a map. key itemName and value itemCount.
                 groceriesRef.updateChildren(map);
+                Toast.makeText(Groceries.this, "Saved!", Toast.LENGTH_SHORT).show();
             }
         });
     }

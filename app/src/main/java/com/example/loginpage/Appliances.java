@@ -1,7 +1,6 @@
 package com.example.loginpage;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -42,10 +41,11 @@ public class Appliances extends AppCompatActivity {
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle toggle;
     private TextView emptyMessage;
-    private AlertDialog deleteDialog;
-    private AlertDialog.Builder builder;
-    private View view;
+    private View confirmationDialogView;
     private Button confirm, cancel;
+    private TextView logoutMsg;
+    private AlertDialog.Builder builder;
+    private AlertDialog logoutDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,31 +54,9 @@ public class Appliances extends AppCompatActivity {
         addnewappliance = (FloatingActionButton) findViewById(R.id.newappliancebutton);
         expandableListView = findViewById(R.id.applianceslistexpandable);
         emptyMessage = findViewById(R.id.EmptyMessage);
+        confirmationDialogView = getLayoutInflater().inflate(R.layout.action_confirmation_dialogue, null);
 
         init();
-
-        builder = new AlertDialog.Builder(Appliances.this);
-        view = getLayoutInflater().inflate(R.layout.delete_confirmation_dialogue, null);
-        builder.setView(view);
-        builder.setCancelable(false);
-        deleteDialog = builder.create();
-        deleteDialog.setCanceledOnTouchOutside(false);
-        confirm = view.findViewById(R.id.confirmDelete);
-        confirm.setSoundEffectsEnabled(false);
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteDialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
-            }
-        });
-        cancel = view.findViewById(R.id.cancelDelete);
-        cancel.setSoundEffectsEnabled(false);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteDialog.getButton(DialogInterface.BUTTON_NEGATIVE).performClick();
-            }
-        });
 
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
@@ -98,6 +76,39 @@ public class Appliances extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        //Dialog for logout confirmation
+        builder = new AlertDialog.Builder(Appliances.this);
+        builder.setCancelable(false);
+        builder.setView(confirmationDialogView);
+        confirm = confirmationDialogView.findViewById(R.id.confirmAction);
+        cancel = confirmationDialogView.findViewById(R.id.cancelAction);
+        logoutMsg = confirmationDialogView.findViewById(R.id.confirmMsg);
+        logoutDialog = builder.create();
+        logoutDialog.setCanceledOnTouchOutside(false);
+
+        logoutMsg.setText("Do you really want to logout?");
+        confirm.setText("Confirm Logout");
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                logoutDialog.cancel();
+                Toast.makeText(getApplicationContext(), "Signing out...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutDialog.cancel();
+            }
+        });
+        //dialog for logout confirmation
 
         //Navigation Bar code start
         NavigationView navigationView = findViewById(R.id.lisofitems);
@@ -119,11 +130,7 @@ public class Appliances extends AppCompatActivity {
                     startActivity(dashboard);
                     finish();
                 } else if (id == R.id.logout) {
-                    auth.signOut();
-                    Toast.makeText(getApplicationContext(), "Signing out...", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    logoutDialog.show();
                 } else if (id == R.id.profile) {
                     Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(profile);
@@ -177,7 +184,7 @@ public class Appliances extends AppCompatActivity {
                 } else {
                     emptyMessage.setVisibility(View.INVISIBLE);
                 }
-                adapter = new CustomAdapterForExpandable(Appliances.this, arraylist, hashMap, deleteDialog);
+                adapter = new CustomAdapterForExpandable(Appliances.this, arraylist, hashMap, confirmationDialogView);
                 expandableListView.setAdapter(adapter);
             }
 

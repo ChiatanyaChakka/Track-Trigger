@@ -1,6 +1,7 @@
 package com.example.loginpage;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,17 +48,58 @@ public class TriggerActivity extends AppCompatActivity {
     HashMap<String, HashMap<String, String>> map;
     private DatabaseReference rootref, triggerref;
     private TextView emptyMsg;
+
+    private View confirmationDialogView;
+    private Button confirm, cancel;
+    private TextView logoutMsg;
+    private AlertDialog.Builder builder;
+    private AlertDialog logoutDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trigger);
         auth = FirebaseAuth.getInstance();
+        confirmationDialogView = getLayoutInflater().inflate(R.layout.action_confirmation_dialogue, null);
 
         emptyMsg = findViewById(R.id.EmptyMessage);
         eventslist = findViewById(R.id.eventslistview);
         newevent = findViewById(R.id.addnewevent);
         eventtitlesG = new ArrayList<String>();
         map = new HashMap<>();
+
+        //Dialog for logout confirmation
+        builder = new AlertDialog.Builder(TriggerActivity.this);
+        builder.setCancelable(false);
+        builder.setView(confirmationDialogView);
+        confirm = confirmationDialogView.findViewById(R.id.confirmAction);
+        cancel = confirmationDialogView.findViewById(R.id.cancelAction);
+        logoutMsg = confirmationDialogView.findViewById(R.id.confirmMsg);
+        logoutDialog = builder.create();
+        logoutDialog.setCanceledOnTouchOutside(false);
+
+        logoutMsg.setText("Do you really want to logout?");
+        confirm.setText("Confirm Logout");
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                logoutDialog.cancel();
+                Toast.makeText(getApplicationContext(), "Signing out...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutDialog.cancel();
+            }
+        });
+        //dialog for logout confirmation
 
         //Navigation Bar code start
         NavigationView navigationView;
@@ -81,11 +124,7 @@ public class TriggerActivity extends AppCompatActivity {
                     finish();
                 }
                 else if (id == R.id.logout){
-                    auth.signOut();
-                    Toast.makeText(getApplicationContext(),"Signing out...", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    logoutDialog.show();
                 }else if (id == R.id.profile){
                     Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(profile);

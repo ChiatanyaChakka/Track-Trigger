@@ -53,12 +53,19 @@ public class ProfessionActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference rootRef, categoryRef;
 
+    private View confirmationDialogView;
+    private Button confirm, cancel;
+    private TextView logoutMsg;
+    private android.app.AlertDialog.Builder builder;
+    private android.app.AlertDialog logoutDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profession);
 
         System.out.println("Entered professional activity");
+        confirmationDialogView = getLayoutInflater().inflate(R.layout.action_confirmation_dialogue, null);
 
         addnewprofitem = (FloatingActionButton) findViewById(R.id.addnewprofcat);
         searchbar = findViewById(R.id.searchbar);
@@ -128,12 +135,12 @@ public class ProfessionActivity extends AppCompatActivity {
                         if(input.getText().toString().equals("")){
                             Toast.makeText(getApplicationContext(), "Please enter some data", Toast.LENGTH_SHORT).show();
                         }
-                        else{
+                        else {
                             profcattitles.add(input.getText().toString());
-                            stringBooleanHashMap.put(input.getText().toString(),false);
+                            stringBooleanHashMap.put(input.getText().toString(), false);
                             adapter.notifyDataSetChanged();
-                            HashMap<String,Object> map = new HashMap<>();
-                            map.put(String.valueOf(professionalButtonNumber),stringBooleanHashMap);
+                            HashMap<String, Object> map = new HashMap<>();
+                            map.put(String.valueOf(professionalButtonNumber), stringBooleanHashMap);
                             categoryRef.getParent().updateChildren(map);
                             alertDialog.dismiss();
                         }
@@ -141,6 +148,39 @@ public class ProfessionActivity extends AppCompatActivity {
                 });
             }
         });
+
+        //Dialog for logout confirmation
+        builder = new android.app.AlertDialog.Builder(ProfessionActivity.this);
+        builder.setCancelable(false);
+        builder.setView(confirmationDialogView);
+        confirm = confirmationDialogView.findViewById(R.id.confirmAction);
+        cancel = confirmationDialogView.findViewById(R.id.cancelAction);
+        logoutMsg = confirmationDialogView.findViewById(R.id.confirmMsg);
+        logoutDialog = builder.create();
+        logoutDialog.setCanceledOnTouchOutside(false);
+
+        logoutMsg.setText("Do you really want to logout?");
+        confirm.setText("Confirm Logout");
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                logoutDialog.cancel();
+                Toast.makeText(getApplicationContext(), "Signing out...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutDialog.cancel();
+            }
+        });
+        //dialog for logout confirmation
 
         //Navigation code start
         NavigationView navigationView;
@@ -165,11 +205,7 @@ public class ProfessionActivity extends AppCompatActivity {
                     finish();
                 }
                 else if (id == R.id.logout){
-                    auth.signOut();
-                    Toast.makeText(getApplicationContext(),"Signing out...", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    logoutDialog.show();
                 }else if (id == R.id.profile){
                     Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(profile);

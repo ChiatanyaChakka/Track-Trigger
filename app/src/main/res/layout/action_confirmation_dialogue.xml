@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Confirm Delete"
+        android:text="Confirm Action"
         android:paddingTop="5dp"
         android:textStyle="bold"
         android:background="@color/blacktheme"
@@ -18,11 +18,12 @@
         android:textSize="35dp" />
 
     <TextView
+        android:id="@+id/confirmMsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/advent_pro"
         android:textColor="@color/blacktheme"
-        android:text="Do you really want to delete this entry?"
+        android:text="Do you really want to perform this action?"
         android:textAlignment="center"
         android:textSize="30dp"
         android:gravity="center_horizontal" />
@@ -35,15 +36,15 @@
         android:layout_marginBottom="10dp">
 
         <Button
-            android:id="@+id/confirmDelete"
+            android:id="@+id/confirmAction"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textStyle="bold"
-            android:text="Confirm Delete"
+            android:text="Confirm Action"
             android:layout_marginRight="10dp" />
 
         <Button
-            android:id="@+id/cancelDelete"
+            android:id="@+id/cancelAction"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textStyle="bold"

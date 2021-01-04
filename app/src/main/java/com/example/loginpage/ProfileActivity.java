@@ -1,8 +1,11 @@
 package com.example.loginpage;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +33,17 @@ public class ProfileActivity extends AppCompatActivity {
     private ArrayList<String> userDetails;
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle toggle;
+    private View confirmationDialogView;
+    private Button confirm, cancel;
+    private TextView logoutMsg;
+    private AlertDialog.Builder builder;
+    private AlertDialog logoutDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        confirmationDialogView = getLayoutInflater().inflate(R.layout.action_confirmation_dialogue, null);
 
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
@@ -84,6 +93,39 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        //Dialog for logout confirmation
+        builder = new AlertDialog.Builder(ProfileActivity.this);
+        builder.setCancelable(false);
+        builder.setView(confirmationDialogView);
+        confirm = confirmationDialogView.findViewById(R.id.confirmAction);
+        cancel = confirmationDialogView.findViewById(R.id.cancelAction);
+        logoutMsg = confirmationDialogView.findViewById(R.id.confirmMsg);
+        logoutDialog = builder.create();
+        logoutDialog.setCanceledOnTouchOutside(false);
+
+        logoutMsg.setText("Do you really want to logout?");
+        confirm.setText("Confirm Logout");
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                logoutDialog.cancel();
+                Toast.makeText(getApplicationContext(), "Signing out...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutDialog.cancel();
+            }
+        });
+        //dialog for logout confirmation
+
         //Navigation Bar code start
         NavigationView navigationView;
         navigationView = findViewById(R.id.lisofitems);
@@ -107,11 +149,7 @@ public class ProfileActivity extends AppCompatActivity {
                     finish();
                 }
                 else if (id == R.id.logout){
-                    auth.signOut();
-                    Toast.makeText(getApplicationContext(),"Signing out...", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    logoutDialog.show();
                 }else if (id == R.id.profile){
                     Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(profile);

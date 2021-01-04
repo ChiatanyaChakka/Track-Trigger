@@ -36,6 +36,11 @@ public class DashBoard extends AppCompatActivity {
     private Button[] customButton;
     private Button[] professionalButton;
     private int customButtonNumber;
+    private View confirmationDialogView;
+    private Button confirm, cancel;
+    private TextView logoutMsg;
+    private AlertDialog.Builder builder;
+    private AlertDialog logoutDialog;
 
     private FirebaseAuth auth;
     private DatabaseReference rootRef, userRef, customSectionRef, profSectionRef;
@@ -50,6 +55,7 @@ public class DashBoard extends AppCompatActivity {
         imagelayout = (LinearLayout) findViewById(R.id.imagelayout);
         navDrawer = findViewById(R.id.dash);
         navigationView = findViewById(R.id.lisofitems);
+        confirmationDialogView = getLayoutInflater().inflate(R.layout.action_confirmation_dialogue, null);
 
         createButtons();
 
@@ -115,6 +121,39 @@ public class DashBoard extends AppCompatActivity {
             }
         });
 
+        //Dialog for logout confirmation
+        builder = new AlertDialog.Builder(DashBoard.this);
+        builder.setCancelable(false);
+        builder.setView(confirmationDialogView);
+        confirm = confirmationDialogView.findViewById(R.id.confirmAction);
+        cancel = confirmationDialogView.findViewById(R.id.cancelAction);
+        logoutMsg = confirmationDialogView.findViewById(R.id.confirmMsg);
+        logoutDialog = builder.create();
+        logoutDialog.setCanceledOnTouchOutside(false);
+
+        logoutMsg.setText("Do you really want to logout?");
+        confirm.setText("Confirm Logout");
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                logoutDialog.cancel();
+                Toast.makeText(getApplicationContext(), "Signing out...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutDialog.cancel();
+            }
+        });
+        //dialog for logout confirmation
+
         navDrawer = findViewById(R.id.dash);
         toggle = new ActionBarDrawerToggle(this, navDrawer, R.string.open, R.string.close);
         navDrawer.addDrawerListener(toggle);
@@ -133,11 +172,7 @@ public class DashBoard extends AppCompatActivity {
                     startActivity(dashboard);
                     finish();
                 } else if (id == R.id.logout) {
-                    auth.signOut();
-                    Toast.makeText(DashBoard.this, "Signing out...", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    logoutDialog.show();
                 }else if (id == R.id.profile){
                     Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(profile);
