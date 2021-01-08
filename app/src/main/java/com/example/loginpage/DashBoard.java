@@ -1,5 +1,6 @@
 package com.example.loginpage;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,32 +29,40 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class DashBoard extends AppCompatActivity {
-    private DrawerLayout navDrawer;
-    private ActionBarDrawerToggle toggle;
     private LinearLayout imagelayout;
-    private NavigationView navigationView;
     private Button GroceryButton, ApplianceButton, HomeMaintButton;
     private Button[] customButton;
     private Button[] professionalButton;
     private int customButtonNumber;
+
     private View confirmationDialogView;
+
     private Button confirm, cancel;
     private TextView logoutMsg;
     private AlertDialog.Builder builder;
     private AlertDialog logoutDialog;
 
+    private NavigationView navigationView;
+    private DrawerLayout navDrawer;
+    private ActionBarDrawerToggle toggle;
+
     private FirebaseAuth auth;
     private DatabaseReference rootRef, userRef, customSectionRef, profSectionRef;
 
-    private String profession, phone;
+    private String profession;
+
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        activity = this;
+        System.out.println(activity + " " + this + " dash:57");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
-        navDrawer = (DrawerLayout) findViewById(R.id.dash);
+
         imagelayout = (LinearLayout) findViewById(R.id.imagelayout);
-        navDrawer = findViewById(R.id.dash);
+
         navigationView = findViewById(R.id.lisofitems);
         confirmationDialogView = getLayoutInflater().inflate(R.layout.action_confirmation_dialogue, null);
 
@@ -85,7 +94,6 @@ public class DashBoard extends AppCompatActivity {
                 for (DataSnapshot details : snapshot.getChildren()) {
                     userDetails.add(details.getValue().toString());
                 }
-                phone = userDetails.get(0);
                 profession = userDetails.get(1);
 
                 profSectionRef = rootRef.child("DashBoard").child("Professional");
@@ -121,7 +129,7 @@ public class DashBoard extends AppCompatActivity {
             }
         });
 
-        //Dialog for logout confirmation
+//          Dialog for logout confirmation
         builder = new AlertDialog.Builder(DashBoard.this);
         builder.setCancelable(false);
         builder.setView(confirmationDialogView);
@@ -152,13 +160,14 @@ public class DashBoard extends AppCompatActivity {
                 logoutDialog.cancel();
             }
         });
-        //dialog for logout confirmation
+//        dialog for logout confirmation
 
+        //nav drawer start
         navDrawer = findViewById(R.id.dash);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toggle = new ActionBarDrawerToggle(this, navDrawer, R.string.open, R.string.close);
         navDrawer.addDrawerListener(toggle);
         toggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -173,7 +182,7 @@ public class DashBoard extends AppCompatActivity {
                     finish();
                 } else if (id == R.id.logout) {
                     logoutDialog.show();
-                }else if (id == R.id.profile){
+                } else if (id == R.id.profile) {
                     Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(profile);
                     finish();
@@ -181,6 +190,9 @@ public class DashBoard extends AppCompatActivity {
                 return true;
             }
         });
+        //nav drawer end
+
+        System.out.println(getApplicationContext() + " dash:193");
 
         GroceryButton = findViewById(R.id.GroceriesButton);
         GroceryButton.setOnClickListener(new View.OnClickListener() {
@@ -236,8 +248,10 @@ public class DashBoard extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (toggle.onOptionsItemSelected(item))
+        System.out.println("there u go " + getApplicationContext() + " " + getApplication() + " " + getCallingActivity());
+        if (toggle.onOptionsItemSelected(item)) {
             return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -310,7 +324,7 @@ public class DashBoard extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         String s = input.getText().toString();
-                        System.out.println(s);
+                        System.out.println(s + " dash:324");
                         customSectionRef.child(String.valueOf(customButtonNumber)).setValue(s);
                         if (s.equals("") || s == null) {
                             Toast.makeText(getApplicationContext(), "Please enter some data", Toast.LENGTH_SHORT).show();

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -65,6 +66,25 @@ public class ProfessionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profession);
 
         System.out.println("Entered professional activity");
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            System.out.println("there");
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayShowCustomEnabled(true);
+            View customView = getLayoutInflater().inflate(R.layout.actionbar_title, null);
+            TextView customTitle = (TextView) customView.findViewById(R.id.actionBarTitle);
+            customTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ProfessionActivity.this, DashBoard.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+            actionBar.setCustomView(customView);
+        } else {
+            System.out.println("not there");
+        }
         confirmationDialogView = getLayoutInflater().inflate(R.layout.action_confirmation_dialogue, null);
 
         addnewprofitem = (FloatingActionButton) findViewById(R.id.addnewprofcat);
