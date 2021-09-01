@@ -19,7 +19,6 @@
         android:roundIcon="@mipmap/logox"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
-        <activity android:name=".Template"></activity>
         <activity android:name=".NewMaintainanceActivity" />
         <activity android:name=".HomeMaintanence" />
 
@@ -43,7 +42,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ProfessionActivity" />
         <activity android:name=".CustomActivity" />
-        <activity android:name=".otpverification" />
+        <activity android:name=".MailVerification" />
         <activity android:name=".LinkAccounts" />
 
         <meta-data

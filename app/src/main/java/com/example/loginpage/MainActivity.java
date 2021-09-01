@@ -54,7 +54,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN =122 ;
+    private static final int RC_SIGN_IN = 122;
 
     private EditText email;
     private EditText password;
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private DatabaseReference userDetailRef, rootRef;
-    private HashMap<String,Object> map;
+    private HashMap<String, Object> map;
     private CallbackManager callbackManager;
     private GoogleSignInClient googleSignInClient;
     private GoogleSignInOptions gso;
@@ -92,10 +92,10 @@ public class MainActivity extends AppCompatActivity {
         password = findViewById(R.id.editTextTextPassword);
         login = findViewById(R.id.LoginButton);
 
-        view = getLayoutInflater().inflate(R.layout.details_request_dialogue,null);
+        view = getLayoutInflater().inflate(R.layout.details_request_dialogue, null);
 
         spinner = view.findViewById(R.id.profession);
-        String[] professionsList = new String[]{"Default","Working Professional","Student","Home Maker"};
+        String[] professionsList = new String[]{"Default", "Working Professional", "Student", "Home Maker"};
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
                 R.layout.spinner_textdef, professionsList);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_textdef);
@@ -124,9 +124,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
-                if(prevCredential != null) {
+                if (prevCredential != null) {
                     SignInWithCredential(credential, prevCredential);
-                }else {
+                } else {
                     SignInWithCredential(credential);
                 }
             }
@@ -140,11 +140,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        google.setOnClickListener(new View.OnClickListener(){
+        google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent signInIntent = googleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
+                Toast.makeText(MainActivity.this, "onclick called", Toast.LENGTH_SHORT).show();
+                System.out.println("onclick called");
             }
         });
 
@@ -165,9 +167,9 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Fill the required credentials!", Toast.LENGTH_SHORT).show();
                 } else {
                     credential = EmailAuthProvider.getCredential(txt_email, txt_password);
-                    if(prevCredential != null) {
+                    if (prevCredential != null) {
                         SignInWithCredential(credential, prevCredential);
-                    }else {
+                    } else {
                         SignInWithCredential(credential);
                     }
                 }
@@ -180,13 +182,12 @@ public class MainActivity extends AppCompatActivity {
                 String txt_phone = phone.getText().toString();
                 String profession = spinner.getSelectedItem().toString();
 
-                if (txt_phone.equals("") || txt_phone == null || !txt_phone.matches("\\d{10}")){
-                    Toast.makeText(getApplicationContext(),"Please enter your 10-digit phone number to continue", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                if (txt_phone.equals("") || txt_phone == null || !txt_phone.matches("\\d{10}")) {
+                    Toast.makeText(getApplicationContext(), "Please enter your 10-digit phone number to continue", Toast.LENGTH_SHORT).show();
+                } else {
                     map.put("phone", txt_phone);
                     map.put("profession", profession);
-                    userDetailRef.child(user.getUid()).setValue(map);
+                    System.out.println(user.getUid() + " not logged in");
                     dialog.dismiss();
                 }
             }
@@ -195,28 +196,37 @@ public class MainActivity extends AppCompatActivity {
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                Intent intent = new Intent(MainActivity.this,DashBoard.class);
-                startActivity(intent);
-                finish();
+                phone.setText("");
+                SignInWithCredential(credential);
             }
         });
     }
 
-    private void SignInWithCredential(AuthCredential currentCredential){
+    private void SignInWithCredential(AuthCredential currentCredential) {
         auth.signInWithCredential(currentCredential).addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
                 user = auth.getCurrentUser();
-                userDetailRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                userDetailRef.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.child(user.getUid()).exists()){
-                            Intent intent = new Intent(MainActivity.this,DashBoard.class);
+                        System.out.println("signin success");
+                        Intent intent = new Intent(MainActivity.this, DashBoard.class);
+
+                        if (snapshot.exists()) {
                             startActivity(intent);
                             finish();
-                        }else {
-                            createDataBase();
-                            dialog.show();
+                        } else {
+                            if (map.isEmpty()) {
+                                createDataBase();
+                                auth.signOut();
+                                dialog.show();
+                            } else {
+                                userDetailRef.child(user.getUid()).setValue(map);
+                                map.clear();
+                                startActivity(intent);
+                                finish();
+                            }
                         }
                     }
 
@@ -246,18 +256,18 @@ public class MainActivity extends AppCompatActivity {
                     auth.fetchSignInMethodsForEmail(email).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
                         @Override
                         public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-                            if (task.isSuccessful()){
+                            if (task.isSuccessful()) {
 //                                SignInMethodQueryResult result = task.getResult();
 //                                List<String> methods = result.getSignInMethods();
 //                                signInMethods = new ArrayList<>(methods);
                                 dialog.show();
-                            }else {
-                                Toast.makeText(MainActivity.this, task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-                }else {
-                    Toast.makeText(MainActivity.this, e.getMessage(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -271,10 +281,10 @@ public class MainActivity extends AppCompatActivity {
                 user.linkWithCredential(previousCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(MainActivity.this,"Account Linking Successful!", Toast.LENGTH_SHORT).show();
-                        }else {
-                            Toast.makeText( MainActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                        if (task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, "Account Linking Successful!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -295,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void createDataBase() {
         DatabaseReference dashBoard = rootRef.child("DashBoard").child(auth.getCurrentUser().getUid());
-        for (int i=1;i<=3;i++){
+        for (int i = 1; i <= 3; i++) {
             dashBoard.child(String.valueOf(i)).setValue("Add\nCustom\nButton");
         }
     }
@@ -304,8 +314,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = auth.getCurrentUser();
-        if(currentUser!=null){
-            Intent intent =new Intent(MainActivity.this,DashBoard.class);
+        if (currentUser != null) {
+            Intent intent = new Intent(MainActivity.this, DashBoard.class);
             startActivity(intent);
             finish();
         }
@@ -316,19 +326,23 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
+            Toast.makeText(MainActivity.this, "activity result done", Toast.LENGTH_SHORT).show();
+            System.out.println("activity result done");
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 credential = GoogleAuthProvider.getCredential(Objects.requireNonNull(account).getIdToken(), null);
                 if (prevCredential != null) {
+                    System.out.println("if else: two");
                     SignInWithCredential(credential, prevCredential);
-                }else{
+                } else {
+                    System.out.println("if else: single");
                     SignInWithCredential(credential);
                 }
             } catch (ApiException e) {
-                Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        }else{
+        } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }

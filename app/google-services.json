@@ -15,6 +15,70 @@
       },
       "oauth_client": [
         {
+          "client_id": "56790523571-7i4lailsa0mbamb4mlba44r03vfpq9tk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.loginpage",
+            "certificate_hash": "e7914c21f42f1a134aed93df63c8d0cbd683515c"
+          }
+        },
+        {
+          "client_id": "56790523571-7mvfkd1rbob4ilsjqblhck0on7ec72p0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.loginpage",
+            "certificate_hash": "4f7d5a97df9854d92c9971751d2d5323f8dabe5d"
+          }
+        },
+        {
+          "client_id": "56790523571-a9bq566suiv63nfugh7gj22e9l3q4k20.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.loginpage",
+            "certificate_hash": "8b264a7c882bd8cb24db7db0a0a8565b79d5aaf5"
+          }
+        },
+        {
+          "client_id": "56790523571-c2i6b7ii7thcvsg0u55jtgber6i7vdle.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.loginpage",
+            "certificate_hash": "bb8582551b94aa02a9a333930a89fa58d87d68dd"
+          }
+        },
+        {
+          "client_id": "56790523571-cibgad7098njjcq3g1jt4c5iocedkabv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.loginpage",
+            "certificate_hash": "62decba75ad73c4526a878f9e98c3bb64df076af"
+          }
+        },
+        {
+          "client_id": "56790523571-kt7sjttdcdqrbf1b1a5ugtkdk8ndh1pg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.loginpage",
+            "certificate_hash": "ea7f50c80d1ca84e4df332e0e4808e73e7c7a2c1"
+          }
+        },
+        {
+          "client_id": "56790523571-nglk3nj095oa6dhlpqn5l02ate77pt44.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.loginpage",
+            "certificate_hash": "9886fe32c4c99148771ada3c065ae89d7a49e2c4"
+          }
+        },
+        {
+          "client_id": "56790523571-ov7vud8ljvd6sm2kj7agn4u5bf1l6els.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.loginpage",
+            "certificate_hash": "745754c84dde3851d9f208810e5245ec87afa544"
+          }
+        },
+        {
           "client_id": "56790523571-848skliamfj9m8sglq1v3b4189th3ulq.apps.googleusercontent.com",
           "client_type": 3
         }

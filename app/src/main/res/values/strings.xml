@@ -30,12 +30,12 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="register">Register</string>
-    <string name="generate_otp">Generate OTP</string>
+    <string name="generate_link">Send verification link</string>
     <string name="enter_otp">Enter OTP</string>
     <string name="verify">Verify</string>
     <string name="Title_otpverify">Verify your Phone Number</string>
     <string name="verify_mail_otp">Verify your Gmail</string>
-    <string name="BothVerificationsDone">After verifying credentials!</string>
+    <string name="VerificationDone">After verifying credentials!</string>
     <string name="SocialProfilePrompt">Or Connect with a Social Profile:</string>
     <string name="enter_your_username">Username</string>
 </resources>
