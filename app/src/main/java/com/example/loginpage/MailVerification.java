@@ -27,7 +27,6 @@ public class MailVerification extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference rootRef;
 
-    private GmailSender sender;
     private ProgressDialog pDialog;
     private AlertDialog alertDialog;
 
@@ -45,7 +44,6 @@ public class MailVerification extends AppCompatActivity {
         Button generateMailLink = findViewById(R.id.LinkGenerator);
         TextView mailText = findViewById(R.id.Mail);
         Button redirect = findViewById(R.id.RegisterAndRedirectToDashbard);
-        sender = new GmailSender();
 
         auth = FirebaseAuth.getInstance();
         rootRef = FirebaseDatabase.getInstance().getReference();
@@ -129,35 +127,4 @@ public class MailVerification extends AppCompatActivity {
         }
         rootRef.child("Usernames").child(auth.getCurrentUser().getUid()).setValue(username);
     }
-
-//    class MyAsyncClass extends AsyncTask<Void, Void, Void> {
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... mApi) {
-//            try {
-//                // Add subject, Body, your mail Id, and receiver mail Id.
-//                System.out.println("Trying to send");
-//                sender.sendMail("OTP--Track and Trigger app",
-//                        "Never share your One-Time-Password with anyone\nYour OTP for verification of the mail is" + "Integer.toString(OTPmail)",
-//                        "trackandtriggerr@gmail.com", mail);
-//
-//                System.out.println("Mail otp sent");
-//
-//            } catch (Exception ex) {
-//                System.out.println("Mail otp sent\n" + ex.getMessage());
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void result) {
-//            super.onPostExecute(result);
-//
-//            Toast.makeText(MailVerification.this, "Email Sent successfully", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 }

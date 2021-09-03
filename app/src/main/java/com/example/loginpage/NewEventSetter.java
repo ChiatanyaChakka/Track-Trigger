@@ -37,12 +37,13 @@ public class NewEventSetter extends AppCompatActivity {
     TextView timeview;
     Button timepicker;
     Button datepicker;
-    Calendar c;
+    Calendar eventTime, trigTime;
     Button save;
-    private DatabaseReference rootref, userref,  triggerref;
+    private DatabaseReference rootref, userref, triggerref;
     private FirebaseAuth auth;
     private ArrayList<String> userdetails;
     private HashMap<String, Object> eventdetails;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +54,8 @@ public class NewEventSetter extends AppCompatActivity {
         dateview = findViewById(R.id.dateview);
         datepicker = findViewById(R.id.datepicker);
         timepicker = findViewById(R.id.timepicker);
-        c = Calendar.getInstance();
+        eventTime = Calendar.getInstance();
+        trigTime = Calendar.getInstance();
         userdetails = new ArrayList<String>();
         eventdetails = new HashMap<String, Object>();
 
@@ -64,14 +66,13 @@ public class NewEventSetter extends AppCompatActivity {
         userref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot snap: snapshot.getChildren()) {
+                for (DataSnapshot snap : snapshot.getChildren()) {
                     userdetails.add(snap.getValue().toString());
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
 
@@ -83,12 +84,12 @@ public class NewEventSetter extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                dateview.setText(""+dayOfMonth+" - "+(month+1)+" - "+year+"");
-                                c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                c.set(Calendar.MONTH, month);
-                                c.set(Calendar.YEAR, year);
+                                dateview.setText("" + dayOfMonth + " - " + (month + 1) + " - " + year + "");
+                                eventTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                eventTime.set(Calendar.MONTH, month);
+                                eventTime.set(Calendar.YEAR, year);
                             }
-                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH) );
+                        }, eventTime.get(Calendar.YEAR), eventTime.get(Calendar.MONTH), eventTime.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show();
             }
         });
@@ -100,13 +101,13 @@ public class NewEventSetter extends AppCompatActivity {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(NewEventSetter.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        timeview.setText(hourOfDay+":"+minute);
-                        c.set(Calendar.MINUTE, minute);
-                        c.set(Calendar.HOUR_OF_DAY, (hourOfDay-1));
+                        timeview.setText(hourOfDay + ":" + minute);
+                        eventTime.set(Calendar.MINUTE, minute);
+                        eventTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                     }
-                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
+                }, eventTime.get(Calendar.HOUR_OF_DAY), eventTime.get(Calendar.MINUTE), false);
 
-                 timePickerDialog.show();
+                timePickerDialog.show();
             }
         });
 
@@ -117,20 +118,28 @@ public class NewEventSetter extends AppCompatActivity {
             public void onClick(View v) {
                 EditText desbox = findViewById(R.id.description);
                 String description = desbox.getText().toString();
+
+                trigTime = (Calendar) eventTime.clone();
+                trigTime.add(Calendar.HOUR_OF_DAY, -1);
+                System.out.println(trigTime.getTime() + " " + eventTime.getTime());
+
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 Intent i = new Intent(getApplication(), MyReceiver.class);
                 i.putExtra("phone num", userdetails.get(0));
                 i.putExtra("description", description);
+                i.putExtra("event time", eventTime);
+                i.putExtra("register time", Calendar.getInstance());
                 PendingIntent broadcast = PendingIntent.getBroadcast(getApplicationContext(), 55, i, PendingIntent.FLAG_UPDATE_CURRENT);
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), broadcast);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, trigTime.getTimeInMillis(), broadcast);
                 Toast.makeText(getApplicationContext(), "Alarm set successfully!", Toast.LENGTH_LONG).show();
 
-                String time = (c.get(Calendar.HOUR_OF_DAY) + 1) +":"+ c.get(Calendar.MINUTE);
-                String date = c.get(Calendar.DAY_OF_MONTH)+"-"+c.get(Calendar.MONTH)+"-"+c.get(Calendar.YEAR);
+                String time = eventTime.get(Calendar.HOUR_OF_DAY) + ":" + eventTime.get(Calendar.MINUTE);
+                String date = eventTime.get(Calendar.DAY_OF_MONTH) + "-" + (eventTime.get(Calendar.MONTH) + 1) + "-" + eventTime.get(Calendar.YEAR);
                 eventdetails.put("Time", time);
                 eventdetails.put("Date", date);
                 eventdetails.put("Description", description);
-                triggerref.child(date+" "+time).updateChildren(eventdetails);
+//                triggerref.child(date+" "+time).updateChildren(eventdetails);
+                triggerref.child(String.valueOf(Calendar.getInstance().getTimeInMillis())).updateChildren(eventdetails);
             }
         });
         Button done = findViewById(R.id.donebutton);

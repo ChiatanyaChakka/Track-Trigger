@@ -145,7 +145,7 @@ public class TriggerActivity extends AppCompatActivity {
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     eventtitlesG.add(snap.getKey());
                     map.put(snap.getKey(), (HashMap) snap.getValue());
-                    System.out.println(snap.getKey());
+//                    System.out.println(snap.getKey());
                 }
                 if (eventtitlesG.isEmpty()) {
                     emptyMsg.setVisibility(View.VISIBLE);

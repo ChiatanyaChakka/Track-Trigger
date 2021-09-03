@@ -76,7 +76,7 @@ public class DashBoard extends AppCompatActivity {
         customSectionRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int i=0;
+                int i = 0;
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     customButton[i++].setText(Objects.requireNonNull(snap.getValue(String.class)));
                 }

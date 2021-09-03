@@ -1,7 +1,5 @@
 package com.example.loginpage;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
@@ -48,7 +46,7 @@ public class GmailSender extends javax.mail.Authenticator {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                System.out.println(error.getMessage());
             }
         });
     }
@@ -73,21 +71,17 @@ public class GmailSender extends javax.mail.Authenticator {
     }
 
     public synchronized void sendMail(String subject, String body, String sender, String recipients) throws Exception {
-        try{
-            MimeMessage message = new MimeMessage(session);
-            DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
-            message.setSender(new InternetAddress(sender));
-            message.setSubject(subject);
-            message.setDataHandler(handler);
-            if (recipients.indexOf(',') > 0)
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
-            else
-                message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
-            Transport.send(message);
-        }catch(Exception e){
-            Log.d("Error", "sendingMailError" + e.getMessage());
-            System.out.println(e.getMessage() + " error");
-        }
+        MimeMessage message = new MimeMessage(session);
+        DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
+        message.setSender(new InternetAddress(sender));
+        message.setSubject(subject);
+        message.setDataHandler(handler);
+        if (recipients.indexOf(',') > 0)
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
+        else
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
+        System.out.println("going to call Transport.send()");
+        Transport.send(message);
     }
 
     public class ByteArrayDataSource implements DataSource {
@@ -116,7 +110,7 @@ public class GmailSender extends javax.mail.Authenticator {
                 return type;
         }
 
-        public InputStream getInputStream() throws IOException {
+        public InputStream getInputStream() {
             return new ByteArrayInputStream(data);
         }
 
@@ -128,5 +122,4 @@ public class GmailSender extends javax.mail.Authenticator {
             throw new IOException("Not Supported");
         }
     }
-
 }
