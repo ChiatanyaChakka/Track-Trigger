@@ -6,7 +6,7 @@ An Android Application to help people with personal task and inventory managemen
 inventory items on your favourite app. Select a profession and get a dashboard which will meet your
 needs.
 
----
+
 
 ## Technologies Used
 
@@ -18,7 +18,7 @@ needs.
 
 Download the signed apk from the repository at below path
 
-```/app/release/app-release.apk```
+[```/app/release/app-release.apk```](/app/release/)
 
 - To run on Android device just install the apk.
 - To run in an emulator drag and drop the apk on the emlator screen and install.
@@ -31,9 +31,10 @@ Download the signed apk from the repository at below path
 - Set reminders for events using Trigger. Notified through mail and SMS 1 hour before event time.
 - Share your inventory to any app of your choice.
 
----
+
 
 ## Screenshots
+<p align="center"><img src="https://user-images.githubusercontent.com/73595822/132094276-7a8c4124-5fa2-42b4-8b9f-8291f093f8e9.png" width="200" height="400"/><img src="https://user-images.githubusercontent.com/73595822/132094315-40649a07-7f1d-465f-91e5-215661c2d71c.png" width="200" height="400"/><img src="https://user-images.githubusercontent.com/73595822/132094340-c64eeba1-b77d-4e35-9117-dfa6c0805ab0.png" width="200" height="400"/><img src="https://user-images.githubusercontent.com/73595822/132094356-3a62ba92-d310-4df4-a3a5-383e0fff448d.png" width="200" height="400"/></p>
 
 ---
 
