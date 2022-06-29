@@ -21,7 +21,7 @@ Download the signed apk from the repository at below path
 [```/app/release/app-release.apk```](/app/release/)
 
 - To run on Android device just install the apk.
-- To run in an emulator drag and drop the apk on the emlator screen and install.
+- To run in an emulator drag and drop the apk on the emulator screen and install.
 
 ## Features
 
